@@ -1045,7 +1045,7 @@ input[type=range]{width:100%;margin-top:12px;accent-color:var(--red)}
           <div class="ci"><div class="ci-icon">&#128336;</div><div><p class="ci-label">Hours</p><p class="ci-val">Mon&ndash;Fri: 9:00 &ndash; 17:00</p></div></div>
         </div>
       </div>
-      <form class="glass-form lg reveal" onsubmit="handleSubmit(event)">
+      <form class="glass-form lg reveal" action="https://formspree.io/f/xdapkvbn" method="POST" onsubmit="handleSubmit(event)">
         <div class="form-row">
           <input type="text" placeholder="Name" required/>
           <input type="email" placeholder="Email" required/>
@@ -1068,9 +1068,9 @@ input[type=range]{width:100%;margin-top:12px;accent-color:var(--red)}
         <div class="footer-strapline">Print with Confidence every time</div>
       </div>
       <div class="footer-cols">
-        <div class="footer-col"><h4>Products</h4><ul><li><a href="#">Copiers</a></li><li><a href="#">Printers</a></li><li><a href="#">Production</a></li><li><a href="#">Audio / Visual</a></li><li><a href="#">Managed Print</a></li></ul></div>
-        <div class="footer-col"><h4>Company</h4><ul><li><a href="#">About Elite</a></li><li><a href="#">Elite Service</a></li><li><a href="#">Elite Extras</a></li><li><a href="#">Customer Portal</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
-        <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:01513178848">0151 317 8848</a></li><li><a href="/cdn-cgi/l/email-protection#02676c73776b706b677142676e6b766765706d77726e61632c616d6f">Email Us</a></li><li><a href="#">Get a Quote</a></li><li><a href="#">SOS Support</a></li></ul></div>
+        <div class="footer-col"><h4>Products</h4><ul><li><a href="products.html">Copiers</a></li><li><a href="products.html">Printers</a></li><li><a href="products.html">Production</a></li><li><a href="products.html">Audio / Visual</a></li><li><a href="managed-print.html">Managed Print</a></li></ul></div>
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Elite</a></li><li><a href="elite-service.html">Elite Service</a></li><li><a href="services.html">Services</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="#">Privacy Policy</a></li></ul></div>
+        <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:01513178848">0151 317 8848</a></li><li><a href="contact.html">Email Us</a></li><li><a href="contact.html">Get a Quote</a></li><li><a href="elite-service.html">SOS Support</a></li></ul></div>
       </div>
     </div>
     <div class="footer-bottom">
@@ -1114,13 +1114,24 @@ document.querySelectorAll('.product-panel:not(.active)').forEach(function(p){ p.
 // CONTACT FORM
 function handleSubmit(e){
   e.preventDefault();
-  var btn = e.target.querySelector('button');
-  btn.textContent = 'Message Sent ✓';
-  setTimeout(function(){ btn.textContent = 'Send Message →'; e.target.reset(); }, 3000);
+  var form = e.target;
+  var data = new FormData(form);
+  var xhr = new XMLHttpRequest();
+  xhr.open('POST', form.action);
+  xhr.setRequestHeader('Accept', 'application/json');
+  xhr.onreadystatechange = function(){
+    if(xhr.readyState === 4){
+      var btn = form.querySelector('button');
+      btn.textContent = 'Message Sent ✓';
+      form.reset();
+      setTimeout(function(){ btn.textContent = 'Send Message →'; }, 4000);
+    }
+  };
+  xhr.send(data);
 }
 
 // SAVINGS COUNTER
-var annualTarget = 20555;
+var annualTarget = parseFloat(localStorage.getItem('eliteAnnualTarget')) || 20555;
 
 function getMonthlyTargets(annual) {
   var months = [], m = 1;
@@ -1151,6 +1162,7 @@ function updateCounter() {
 
 function adjustTarget(delta) {
   annualTarget = Math.max(1000, annualTarget + delta);
+  localStorage.setItem('eliteAnnualTarget', annualTarget);
   document.getElementById('targetDisplay').textContent = '£' + annualTarget.toLocaleString('en-GB');
   // Reset and re-animate with new target
   counterStarted = false;
