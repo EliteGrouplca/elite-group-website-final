@@ -294,7 +294,7 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
 
         <!-- SALES FORM -->
         <div id="form-sales">
-          <form class="glass-form lg" onsubmit="handleSubmit(event,'sales')">
+          <form class="glass-form lg" action="https://formspree.io/f/xdapkvbn" method="POST" onsubmit="handleSubmit(event,'sales')">
             <div class="form-row">
               <div class="form-group"><label>First Name</label><input type="text" placeholder="Jane" required/></div>
               <div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith" required/></div>
@@ -328,7 +328,7 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
 
         <!-- SUPPORT FORM -->
         <div id="form-support" style="display:none">
-          <form class="glass-form lg" onsubmit="handleSubmit(event,'support')">
+          <form class="glass-form lg" action="https://formspree.io/f/mgopvbdl" method="POST" onsubmit="handleSubmit(event,'support')">
             <div class="form-row">
               <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" required/></div>
               <div class="form-group"><label>Phone</label><input type="tel" placeholder="Best number to reach you" required/></div>
@@ -365,7 +365,7 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
 
         <!-- FINANCE FORM -->
         <div id="form-finance" style="display:none">
-          <form class="glass-form lg" onsubmit="handleSubmit(event,'finance')">
+          <form class="glass-form lg" action="https://formspree.io/f/mgopvbdl" method="POST" onsubmit="handleSubmit(event,'finance')">
             <div class="form-row">
               <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" required/></div>
               <div class="form-group"><label>Job Title</label><input type="text" placeholder="e.g. Business Manager"/></div>
@@ -457,4 +457,30 @@ document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
 function switchTab(ev, tab){
   document.querySelectorAll('.ftab').forEach(function(t){ t.classList.remove('active'); });
   ev.target.classList.add('active');
-  ['sales','support','fina
+  ['sales','support','finance'].forEach(function(t){
+    document.getElementById('form-' + t).style.display = (t === tab) ? 'block' : 'none';
+  });
+}
+
+function handleSubmit(e, tab){
+  e.preventDefault();
+  var form = e.target;
+  var data = new FormData(form);
+  fetch(form.action, {
+    method: 'POST',
+    body: data,
+    headers: { 'Accept': 'application/json' }
+  }).then(function(response){
+    if(response.ok){
+      form.style.display = 'none';
+      document.getElementById('success-' + tab).style.display = 'block';
+    } else {
+      alert('Something went wrong. Please call us on 0151 317 8848.');
+    }
+  }).catch(function(){
+    alert('Something went wrong. Please call us on 0151 317 8848.');
+  });
+}
+</script>
+</body>
+</html>
