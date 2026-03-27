@@ -247,6 +247,24 @@ input[type=range]{width:100%;margin-top:12px;accent-color:var(--red)}
   .footer-cols{flex-wrap:wrap;gap:28px}
   .form-row{grid-template-columns:1fr}
 }
+
+/* MOBILE MENU */
+.mob-btn{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:8px;border:none;background:transparent;z-index:201}
+.mob-btn span{display:block;width:22px;height:2px;background:var(--g900);border-radius:9999px;transition:all .3s}
+.mob-menu{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(255,255,255,0.97);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);z-index:198;flex-direction:column;align-items:center;justify-content:center;gap:0}
+.mob-menu.open{display:flex}
+.mob-menu a{font-size:28px;font-weight:900;color:var(--g900);text-decoration:none;padding:16px 24px;letter-spacing:-.02em;transition:color .2s;border-bottom:1px solid var(--g100);width:100%;text-align:center}
+.mob-menu a:hover{color:var(--red)}
+.mob-menu a.active{color:var(--red)}
+.mob-menu .mob-cta{display:flex;gap:12px;padding:32px 24px;width:100%;justify-content:center}
+.mob-menu .mob-cta a{font-size:16px;font-weight:700;padding:14px 28px;border-radius:9999px;width:auto;border:none}
+.mob-menu .mob-cta .btn-fill{background:var(--red);color:#fff;box-shadow:0 4px 14px rgba(232,53,58,0.3)}
+.mob-menu .mob-cta .btn-outline{background:transparent;color:var(--g900);border:1.5px solid var(--g200) !important}
+@media(max-width:768px){
+  .mob-btn{display:flex}
+  .nav-links{display:none !important}
+  .nav-cta{display:none}
+}
 </style>
 </head>
 <body>
@@ -268,6 +286,11 @@ input[type=range]{width:100%;margin-top:12px;accent-color:var(--red)}
     <a href="contact.html" class="btn-ghost">Get a Quote</a>
     <a href="tel:01513178848" class="btn-fill">Call Us</a>
   </div>
+<button class="mob-btn" onclick="toggleMenu()" aria-label="Menu">
+    <span id="mb1"></span>
+    <span id="mb2"></span>
+    <span id="mb3"></span>
+  </button>
 </nav>
 
 <!-- HERO -->
