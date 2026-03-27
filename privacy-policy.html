@@ -3,17 +3,13 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Account Management | Elite Group</title>
+<title>Privacy Policy | Elite Group</title>
 <link href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap" rel="stylesheet"/>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{--red:#E8353A;--red-deep:#C0292E;--white:#fff;--g50:#f7f7f7;--g100:#ebebeb;--g200:#d6d6d6;--g400:#86868b;--g600:#3d3d3d;--g900:#1d1d1f;--font:'Lato',sans-serif;}
 html{scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--white);color:var(--g900);overflow-x:hidden;-webkit-font-smoothing:antialiased}
-.lg{background:rgba(255,255,255,0.14);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:1px solid rgba(255,255,255,0.6);box-shadow:0 4px 32px rgba(0,0,0,0.07),inset 0 1.5px 0 rgba(255,255,255,0.95);position:relative;overflow:hidden}
-.lg::before{content:'';position:absolute;top:0;left:8%;width:84%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,1) 40%,rgba(255,255,255,1) 60%,transparent);pointer-events:none}
-.lg-dark{background:rgba(255,255,255,0.06);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:1px solid rgba(255,255,255,0.14);box-shadow:0 4px 32px rgba(0,0,0,0.28),inset 0 1.5px 0 rgba(255,255,255,0.2);position:relative;overflow:hidden}
-.lg-dark::before{content:'';position:absolute;top:0;left:8%;width:84%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.4) 40%,rgba(255,255,255,0.5) 60%,transparent);pointer-events:none}
 nav{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:200;width:min(980px,calc(100% - 32px));height:68px;border-radius:9999px;background:rgba(255,255,255,0.06);backdrop-filter:blur(8px) saturate(140%);-webkit-backdrop-filter:blur(8px) saturate(140%);border:1px solid rgba(255,255,255,0.55);box-shadow:0 2px 24px rgba(0,0,0,0.06),inset 0 1px 0 rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:space-between;padding:0 18px;transition:all .4s}
 nav.scrolled{background:rgba(255,255,255,0.18);backdrop-filter:blur(12px) saturate(160%);-webkit-backdrop-filter:blur(12px) saturate(160%)}
 .nav-mag{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:199;width:min(980px,calc(100% - 32px));height:68px;border-radius:9999px;overflow:hidden;pointer-events:none}
@@ -27,57 +23,25 @@ nav.scrolled{background:rgba(255,255,255,0.18);backdrop-filter:blur(12px) satura
 .btn-ghost:hover{background:rgba(232,53,58,0.08)}
 .btn-fill{font-size:13px;font-weight:700;background:var(--red);color:#fff;text-decoration:none;padding:7px 16px;border-radius:9999px;transition:all .2s}
 .btn-fill:hover{background:var(--red-deep)}
-.hero{min-height:52vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 80px;position:relative;overflow:hidden;background:var(--white)}
-.hero-sky{position:absolute;bottom:0;left:0;width:100%;pointer-events:none;z-index:0;line-height:0}
-.hero-sky svg{display:block;width:100%}
-.hero-content{position:relative;z-index:1}
-.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:20px;opacity:0;animation:fadeUp .7s .1s forwards}
-.hero h1{font-size:clamp(44px,6vw,80px);font-weight:900;letter-spacing:-.04em;line-height:1.04;color:var(--g900);opacity:0;animation:fadeUp .7s .22s forwards}
-.hero h1 .accent{color:var(--red)}
-.hero-sub{font-size:clamp(16px,2vw,19px);font-weight:300;color:var(--g400);margin-top:20px;max-width:560px;line-height:1.65;opacity:0;animation:fadeUp .7s .36s forwards}
-section{padding:100px 24px}
-.wrap{max-width:980px;margin:0 auto}
-.wrap-wide{max-width:1120px;margin:0 auto}
-.eyebrow{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:14px}
-.sec-title{font-size:clamp(32px,4vw,52px);font-weight:900;letter-spacing:-.03em;line-height:1.07;color:var(--g900)}
-.sec-body{font-size:18px;font-weight:300;color:var(--g400);line-height:1.65;margin-top:16px}
-/* WHAT YOU GET */
-.what-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
-.get-card{border-radius:24px;padding:36px 28px}
-.get-icon{font-size:32px;margin-bottom:18px}
-.get-card h3{font-size:18px;font-weight:700;color:var(--g900);margin-bottom:10px}
-.get-card p{font-size:14px;font-weight:300;color:var(--g400);line-height:1.65}
-/* REVIEW PROCESS */
-.review-section{background:var(--g900);padding:100px 24px}
-.review-section .sec-title{color:#fff}
-.review-section .eyebrow{color:rgba(255,255,255,0.4)}
-.review-section .sec-body{color:rgba(255,255,255,0.5)}
-.review-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
-.review-card{border-radius:20px;padding:28px 24px;text-align:center}
-.review-freq{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--red);margin-bottom:10px}
-.review-card h3{font-size:17px;font-weight:700;color:#fff;margin-bottom:10px}
-.review-card p{font-size:13px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.6}
-/* CONTACT FORM */
-.form-section{background:var(--g50);padding:100px 24px;border-top:1px solid var(--g100)}
-.form-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:72px;align-items:start;margin-top:0}
-.form-intro h2{font-size:clamp(28px,3.5vw,42px);font-weight:900;letter-spacing:-.03em;color:var(--g900);margin-bottom:14px}
-.form-intro p{font-size:16px;font-weight:300;color:var(--g400);line-height:1.65;margin-bottom:28px}
-.promise-list{list-style:none;display:flex;flex-direction:column;gap:12px}
-.promise-list li{font-size:14px;color:var(--g600);display:flex;align-items:flex-start;gap:10px;line-height:1.5}
-.promise-list li::before{content:'✓';color:var(--red);font-weight:700;font-size:12px;flex-shrink:0;margin-top:2px}
-.glass-form{border-radius:24px;padding:36px;display:flex;flex-direction:column;gap:14px}
-.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.form-group{display:flex;flex-direction:column;gap:6px}
-.form-group label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--g600)}
-.glass-form input,.glass-form textarea,.glass-form select{width:100%;padding:13px 16px;border:1px solid var(--g200);border-radius:12px;font-size:14px;font-family:var(--font);background:rgba(255,255,255,0.8);color:var(--g900);outline:none;transition:border-color .2s,box-shadow .2s;appearance:none}
-.glass-form input:focus,.glass-form textarea:focus,.glass-form select:focus{border-color:var(--red);box-shadow:0 0 0 3px rgba(232,53,58,0.1)}
-.glass-form textarea{resize:vertical;min-height:110px}
-.glass-form button{background:var(--g900);color:#fff;border:none;padding:14px 28px;border-radius:9999px;font-size:15px;font-weight:700;font-family:var(--font);cursor:pointer;align-self:flex-start;transition:all .2s}
-.glass-form button:hover{background:var(--g600)}
-.form-success{display:none;text-align:center;padding:48px 24px}
-.form-success .tick{font-size:48px;margin-bottom:16px}
-.form-success h3{font-size:22px;font-weight:900;color:var(--g900);margin-bottom:8px}
-.form-success p{font-size:15px;font-weight:300;color:var(--g400)}
+
+/* HERO */
+.hero{min-height:320px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:140px 24px 60px;background:var(--white);border-bottom:1px solid var(--g100)}
+.hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:16px}
+.hero h1{font-size:clamp(36px,5vw,64px);font-weight:900;letter-spacing:-.04em;line-height:1.04;color:var(--g900)}
+.hero-sub{font-size:16px;font-weight:300;color:var(--g400);margin-top:14px}
+
+/* CONTENT */
+.policy-body{max-width:760px;margin:0 auto;padding:80px 24px 120px}
+.policy-body h2{font-size:24px;font-weight:700;color:var(--g900);margin:48px 0 14px;letter-spacing:-.01em}
+.policy-body h2:first-child{margin-top:0}
+.policy-body p{font-size:16px;font-weight:300;color:var(--g600);line-height:1.75;margin-bottom:14px}
+.policy-body ul{margin:0 0 14px 20px;display:flex;flex-direction:column;gap:8px}
+.policy-body ul li{font-size:16px;font-weight:300;color:var(--g600);line-height:1.65}
+.policy-body a{color:var(--red);text-decoration:none}
+.policy-body a:hover{text-decoration:underline}
+.policy-body strong{font-weight:700;color:var(--g900)}
+.policy-date{font-size:13px;font-weight:400;color:var(--g400);margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--g100)}
+
 footer{background:var(--g900);padding:56px 24px 32px}
 .footer-inner{max-width:980px;margin:0 auto}
 .footer-top{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:40px;border-bottom:1px solid rgba(255,255,255,0.08)}
@@ -94,10 +58,7 @@ footer{background:var(--g900);padding:56px 24px 32px}
 .footer-social{display:flex;gap:16px}
 .footer-social a{font-size:12px;font-weight:700;color:rgba(255,255,255,0.35);text-decoration:none;transition:color .2s}
 .footer-social a:hover{color:#fff}
-@keyframes fadeUp{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
-.reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease,transform .7s ease}
-.reveal.visible{opacity:1;transform:translateY(0)}
-@media(max-width:768px){.nav-links{display:none}.what-grid{grid-template-columns:1fr}.review-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr;gap:40px}.form-row{grid-template-columns:1fr}.footer-top{flex-direction:column;gap:32px}.footer-cols{flex-wrap:wrap;gap:28px}}
+@media(max-width:768px){.nav-links{display:none}.footer-top{flex-direction:column;gap:32px}.footer-cols{flex-wrap:wrap;gap:28px}}
 </style>
 </head>
 <body>
@@ -110,7 +71,7 @@ footer{background:var(--g900);padding:56px 24px 32px}
     <li><a href="index.html">Home</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="products.html">Products</a></li>
-    <li><a href="services.html" class="active">Services</a></li>
+    <li><a href="services.html">Services</a></li>
     <li><a href="managed-print.html">Managed Print</a></li>
     <li><a href="contact.html">Contact</a></li>
   </ul>
@@ -120,284 +81,107 @@ footer{background:var(--g900);padding:56px 24px 32px}
   </div>
 </nav>
 
-<!-- HERO -->
 <section class="hero">
-  <div class="hero-sky">
-    <svg viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#555555" stop-opacity="0.35"/>
-          <stop offset="100%" stop-color="#555555" stop-opacity="0.08"/>
-        </linearGradient>
-        <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stop-color="#777777" stop-opacity="0.4"/>
-          <stop offset="100%" stop-color="#555555" stop-opacity="0.1"/>
-        </linearGradient>
-        <pattern id="win" x="0" y="0" width="8" height="10" patternUnits="userSpaceOnUse">
-          <rect x="1" y="1" width="2.5" height="3" fill="rgba(150,150,150,0.3)" rx="0.3"/>
-          <rect x="4.5" y="1" width="2.5" height="3" fill="rgba(150,150,150,0.25)" rx="0.3"/>
-          <rect x="1" y="6" width="2.5" height="3" fill="rgba(150,150,150,0.2)" rx="0.3"/>
-          <rect x="4.5" y="6" width="2.5" height="3" fill="rgba(150,150,150,0.28)" rx="0.3"/>
-        </pattern>
-      </defs>
-
-      <!-- Ground line -->
-      <rect x="0" y="245" width="1440" height="15" fill="url(#sg)" opacity="0.6"/>
-
-      <!-- Far left low buildings -->
-      <rect x="0" y="200" width="22" height="46" fill="url(#sg)"/>
-      <rect x="0" y="200" width="22" height="46" fill="url(#win)" opacity="0.5"/>
-      <rect x="24" y="190" width="18" height="56" fill="url(#sg)"/>
-      <rect x="44" y="205" width="14" height="41" fill="url(#sg)"/>
-      <rect x="60" y="195" width="20" height="51" fill="url(#sg)"/>
-      <rect x="82" y="210" width="12" height="36" fill="url(#sg)"/>
-      <rect x="96" y="198" width="16" height="48" fill="url(#sg)"/>
-      <rect x="114" y="208" width="14" height="38" fill="url(#sg)"/>
-      <rect x="130" y="193" width="22" height="53" fill="url(#sg)"/>
-      <rect x="154" y="202" width="14" height="44" fill="url(#sg)"/>
-      <rect x="170" y="194" width="18" height="52" fill="url(#sg)"/>
-      <rect x="190" y="210" width="10" height="36" fill="url(#sg)"/>
-
-      <!-- Radio City Tower / St Johns Beacon — tall slender tower -->
-      <rect x="220" y="80" width="10" height="166" fill="url(#sg)"/>
-      <!-- Observation deck (bulge) -->
-      <rect x="212" y="110" width="26" height="30" rx="4" fill="url(#sg)"/>
-      <rect x="215" y="113" width="20" height="24" rx="3" fill="url(#glow)" opacity="0.7"/>
-      <!-- Antenna -->
-      <rect x="224" y="52" width="4" height="30" fill="url(#glow)"/>
-      <!-- Base building -->
-      <rect x="205" y="175" width="40" height="71" fill="url(#sg)"/>
-      <rect x="205" y="175" width="40" height="71" fill="url(#win)" opacity="0.5"/>
-
-      <!-- Mid-left buildings -->
-      <rect x="252" y="198" width="16" height="48" fill="url(#sg)"/>
-      <rect x="270" y="188" width="20" height="58" fill="url(#sg)"/>
-      <rect x="292" y="205" width="12" height="41" fill="url(#sg)"/>
-      <rect x="306" y="195" width="18" height="51" fill="url(#sg)"/>
-
-      <!-- Port of Liverpool Building -->
-      <rect x="330" y="148" width="110" height="98" fill="url(#sg)"/>
-      <rect x="330" y="148" width="110" height="98" fill="url(#win)" opacity="0.5"/>
-      <rect x="340" y="130" width="90" height="20" fill="url(#sg)"/>
-      <rect x="352" y="114" width="66" height="18" fill="url(#sg)"/>
-      <ellipse cx="385" cy="114" rx="34" ry="14" fill="url(#sg)"/>
-      <ellipse cx="385" cy="106" rx="22" ry="10" fill="url(#glow)" opacity="0.7"/>
-      <rect x="381" y="84" width="8" height="24" fill="url(#glow)"/>
-      <polygon points="385,76 380,88 390,88" fill="#777" opacity="0.5"/>
-
-      <!-- Liver Building — centre landmark -->
-      <rect x="460" y="120" width="310" height="126" fill="url(#sg)"/>
-      <rect x="460" y="120" width="310" height="126" fill="url(#win)" opacity="0.55"/>
-      <rect x="458" y="148" width="314" height="5" fill="url(#glow)" opacity="0.4"/>
-
-      <!-- Left liver tower -->
-      <rect x="470" y="58" width="66" height="106" fill="url(#sg)"/>
-      <rect x="470" y="58" width="66" height="106" fill="url(#win)" opacity="0.5"/>
-      <rect x="466" y="42" width="74" height="18" fill="url(#sg)"/>
-      <ellipse cx="503" cy="70" rx="18" ry="18" fill="url(#glow)" opacity="0.5"/>
-      <line x1="503" y1="70" x2="503" y2="58" stroke="rgba(180,180,180,0.6)" stroke-width="1.5"/>
-      <line x1="503" y1="70" x2="513" y2="76" stroke="rgba(180,180,180,0.5)" stroke-width="1.2"/>
-      <rect x="499" y="10" width="8" height="34" fill="url(#glow)"/>
-      <polygon points="503,4 496,18 510,18" fill="#777" opacity="0.55"/>
-      <path d="M499,8 Q492,4 487,8" stroke="#777" stroke-width="1.5" fill="none" opacity="0.45"/>
-      <path d="M507,8 Q514,4 519,8" stroke="#777" stroke-width="1.5" fill="none" opacity="0.45"/>
-
-      <!-- Right liver tower -->
-      <rect x="694" y="58" width="66" height="106" fill="url(#sg)"/>
-      <rect x="694" y="58" width="66" height="106" fill="url(#win)" opacity="0.5"/>
-      <rect x="690" y="42" width="74" height="18" fill="url(#sg)"/>
-      <ellipse cx="727" cy="70" rx="18" ry="18" fill="url(#glow)" opacity="0.5"/>
-      <line x1="727" y1="70" x2="727" y2="58" stroke="rgba(180,180,180,0.6)" stroke-width="1.5"/>
-      <line x1="727" y1="70" x2="716" y2="76" stroke="rgba(180,180,180,0.5)" stroke-width="1.2"/>
-      <rect x="723" y="10" width="8" height="34" fill="url(#glow)"/>
-      <polygon points="727,4 720,18 734,18" fill="#777" opacity="0.55"/>
-      <path d="M723,8 Q716,4 711,8" stroke="#777" stroke-width="1.5" fill="none" opacity="0.45"/>
-      <path d="M731,8 Q738,4 743,8" stroke="#777" stroke-width="1.5" fill="none" opacity="0.45"/>
-
-      <!-- Cunard Building -->
-      <rect x="776" y="138" width="112" height="108" fill="url(#sg)"/>
-      <rect x="776" y="138" width="112" height="108" fill="url(#win)" opacity="0.5"/>
-      <rect x="784" y="118" width="96" height="22" fill="url(#sg)"/>
-      <rect x="796" y="102" width="72" height="18" fill="url(#sg)"/>
-      <ellipse cx="832" cy="102" rx="36" ry="16" fill="url(#sg)"/>
-      <ellipse cx="832" cy="92" rx="24" ry="12" fill="url(#glow)" opacity="0.6"/>
-      <rect x="828" y="68" width="8" height="26" fill="url(#glow)"/>
-      <polygon points="832,60 827,72 837,72" fill="#777" opacity="0.4"/>
-
-      <!-- Liverpool Cathedral (Anglican) — right side, large Gothic structure -->
-      <!-- Main body -->
-      <rect x="900" y="130" width="160" height="116" fill="url(#sg)"/>
-      <rect x="900" y="130" width="160" height="116" fill="url(#win)" opacity="0.4"/>
-      <!-- Central tower -->
-      <rect x="950" y="60" width="60" height="72" fill="url(#sg)"/>
-      <rect x="950" y="60" width="60" height="72" fill="url(#win)" opacity="0.45"/>
-      <!-- Tower battlements -->
-      <rect x="948" y="52" width="10" height="12" fill="url(#sg)"/>
-      <rect x="962" y="52" width="10" height="12" fill="url(#sg)"/>
-      <rect x="976" y="52" width="10" height="12" fill="url(#sg)"/>
-      <rect x="990" y="52" width="10" height="12" fill="url(#sg)"/>
-      <rect x="1004" y="52" width="8" height="12" fill="url(#sg)"/>
-      <!-- Left transept -->
-      <rect x="900" y="150" width="52" height="96" fill="url(#sg)"/>
-      <!-- Right transept -->
-      <rect x="1008" y="150" width="52" height="96" fill="url(#sg)"/>
-      <!-- Pinnacle spires on tower -->
-      <rect x="953" y="34" width="6" height="20" fill="url(#glow)"/>
-      <polygon points="956,28 952,38 960,38" fill="#777" opacity="0.45"/>
-      <rect x="1001" y="34" width="6" height="20" fill="url(#glow)"/>
-      <polygon points="1004,28 1000,38 1008,38" fill="#777" opacity="0.45"/>
-
-      <!-- Right side buildings -->
-      <rect x="1068" y="195" width="18" height="51" fill="url(#sg)"/>
-      <rect x="1088" y="185" width="22" height="61" fill="url(#sg)"/>
-      <rect x="1113" y="175" width="8" height="71" fill="url(#sg)"/>
-      <rect x="1123" y="198" width="20" height="48" fill="url(#sg)"/>
-      <rect x="1145" y="205" width="15" height="41" fill="url(#sg)"/>
-      <rect x="1162" y="190" width="24" height="56" fill="url(#sg)"/>
-      <rect x="1188" y="200" width="14" height="46" fill="url(#sg)"/>
-      <rect x="1204" y="192" width="20" height="54" fill="url(#sg)"/>
-      <rect x="1226" y="205" width="16" height="41" fill="url(#sg)"/>
-      <rect x="1244" y="195" width="22" height="51" fill="url(#sg)"/>
-      <rect x="1268" y="205" width="14" height="41" fill="url(#sg)"/>
-      <rect x="1284" y="188" width="28" height="58" fill="url(#sg)"/>
-      <rect x="1315" y="198" width="16" height="48" fill="url(#sg)"/>
-      <rect x="1333" y="190" width="22" height="56" fill="url(#sg)"/>
-      <rect x="1390" y="188" width="50" height="58" fill="url(#sg)"/>
-
-      <!-- Water reflection line -->
-      <rect x="0" y="248" width="1440" height="2" fill="url(#sg)" opacity="0.4"/>
-    </svg>
-  </div>
-  <div class="hero-content">
-    <p class="hero-eyebrow">Account Management</p>
-    <h1>Your partner,<br><span class="accent">not just a supplier.</span></h1>
-    <p class="hero-sub">Every Elite customer gets a dedicated account manager — a real person who knows your business and proactively looks after everything for you.</p>
-  </div>
+  <p class="hero-eyebrow">Legal</p>
+  <h1>Privacy Policy</h1>
+  <p class="hero-sub">How Elite Group LCA Ltd collects, uses and protects your information.</p>
 </section>
 
-<!-- WHAT YOU GET -->
-<section style="background:var(--white);padding:100px 24px;border-top:1px solid var(--g100)">
-  <div class="wrap-wide">
-    <div style="text-align:center" class="reveal">
-      <p class="eyebrow">What you get</p>
-      <h2 class="sec-title">Everything included, nothing extra.</h2>
-      <p class="sec-body" style="text-align:center;margin:16px auto 0;max-width:520px">From day one you have a named account manager who is responsible for everything Elite does for your organisation.</p>
-    </div>
-    <div class="what-grid reveal">
-      <div class="get-card lg">
-        <div class="get-icon">&#128222;</div>
-        <h3>Direct contact</h3>
-        <p>A direct mobile number for your account manager. Not a call centre, not a ticket system — a real person who knows your account.</p>
-      </div>
-      <div class="get-card lg">
-        <div class="get-icon">&#128203;</div>
-        <h3>Proactive management</h3>
-        <p>We don&rsquo;t wait for you to call us. Your account manager monitors your contract, flags issues and keeps everything running smoothly.</p>
-      </div>
-      <div class="get-card lg">
-        <div class="get-icon">&#128200;</div>
-        <h3>Usage reporting</h3>
-        <p>Regular reports showing your print volumes, costs and trends — so you always know exactly where your money is going.</p>
-      </div>
-      <div class="get-card lg">
-        <div class="get-icon">&#128176;</div>
-        <h3>Contract management</h3>
-        <p>We track your contract end dates and proactively manage renewals — no unexpected rollovers or price hikes.</p>
-      </div>
-      <div class="get-card lg">
-        <div class="get-icon">&#128736;</div>
-        <h3>Issue escalation</h3>
-        <p>If a support issue isn&rsquo;t resolved to your satisfaction, your account manager steps in personally to get it sorted.</p>
-      </div>
-      <div class="get-card lg">
-        <div class="get-icon">&#127775;</div>
-        <h3>Upgrade planning</h3>
-        <p>When the time comes, your account manager will recommend the best upgrade path based on your actual usage and budget.</p>
-      </div>
-    </div>
-  </div>
-</section>
+<div class="policy-body">
+  <p class="policy-date">Last updated: March 2026</p>
 
-<!-- REVIEW PROCESS -->
-<section class="review-section">
-  <div class="wrap-wide">
-    <div style="text-align:center" class="reveal">
-      <p class="eyebrow">Regular Reviews</p>
-      <h2 class="sec-title">We check in — you don&rsquo;t have to.</h2>
-      <p class="sec-body" style="text-align:center;margin:16px auto 0;max-width:520px">Our structured review process means your account is always being looked after, even when you&rsquo;re busy running your organisation.</p>
-    </div>
-    <div class="review-grid reveal">
-      <div class="review-card lg-dark">
-        <div class="review-freq">Monthly</div>
-        <h3>Usage Check</h3>
-        <p>We review your print volumes and flag any unusual spikes or opportunities to reduce costs.</p>
-      </div>
-      <div class="review-card lg-dark">
-        <div class="review-freq">Quarterly</div>
-        <h3>Account Review</h3>
-        <p>A formal review of your account — costs, device performance, service levels and upcoming needs.</p>
-      </div>
-      <div class="review-card lg-dark">
-        <div class="review-freq">Annually</div>
-        <h3>Contract Review</h3>
-        <p>A full contract review including pricing, device suitability and planning for the year ahead.</p>
-      </div>
-      <div class="review-card lg-dark">
-        <div class="review-freq">On Demand</div>
-        <h3>Ad Hoc Support</h3>
-        <p>Any time you have a question, a concern or a new requirement — your account manager is available.</p>
-      </div>
-    </div>
-  </div>
-</section>
+  <h2>Who we are</h2>
+  <p>Elite Group LCA Ltd (&ldquo;Elite Group&rdquo;, &ldquo;we&rdquo;, &ldquo;us&rdquo;, &ldquo;our&rdquo;) is a managed print services company registered in England and Wales. Our registered address is Unit 2 Commerce Park, Campbeltown Road, Birkenhead, CH41 9HP. Company registration number: 11097661. VAT number: 285 2432 95.</p>
+  <p>We are committed to protecting your personal data and handling it responsibly in accordance with the UK General Data Protection Regulation (UK GDPR) and the Data Protection Act 2018.</p>
 
-<!-- CONTACT FORM -->
-<section class="form-section" id="contact">
-  <div class="wrap">
-    <div class="form-grid">
-      <div class="form-intro reveal">
-        <p class="eyebrow">Get in touch</p>
-        <h2>Contact your account manager</h2>
-        <p>Already an Elite customer? Use this form to get a message directly to your account management team. We&rsquo;ll respond within one working day.</p>
-        <ul class="promise-list">
-          <li>Response within one working day</li>
-          <li>Direct to your account management team</li>
-          <li>For urgent issues call 0151 317 8848</li>
-          <li>For technical support use the Elite Service page</li>
-        </ul>
-      </div>
-      <div class="reveal">
-        <form class="glass-form lg" action="https://formspree.io/f/mgopvbdl" method="POST" onsubmit="handleSubmit(event)">
-          <div class="form-row">
-            <div class="form-group"><label>Your Name</label><input type="text" name="name" placeholder="Jane Smith" required/></div>
-            <div class="form-group"><label>Organisation</label><input type="text" name="organisation" placeholder="Your school or business" required/></div>
-          </div>
-          <div class="form-group"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com" required/></div>
-          <div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="07700 000000"/></div>
-          <div class="form-group">
-            <label>What is this about?</label>
-            <select name="subject">
-              <option value="">Select a topic...</option>
-              <option>Account review request</option>
-              <option>Contract query</option>
-              <option>Usage report request</option>
-              <option>Upgrade / new device enquiry</option>
-              <option>Billing query</option>
-              <option>General account query</option>
-            </select>
-          </div>
-          <div class="form-group"><label>Message</label><textarea name="message" placeholder="Tell us what you need..."></textarea></div>
-          <button type="submit">Send Message &rarr;</button>
-        </form>
-        <div class="form-success" id="form-success-am">
-          <div class="tick">&#10003;</div>
-          <h3>Message received!</h3>
-          <p>Your account management team will be in touch within one working day.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
+  <h2>What information we collect</h2>
+  <p>We may collect the following types of personal information:</p>
+  <ul>
+    <li>Your name, job title and organisation name</li>
+    <li>Contact information including email address and telephone number</li>
+    <li>Business address and billing information</li>
+    <li>Information you provide when completing our contact, support or quote request forms</li>
+    <li>Technical data including IP address, browser type and pages visited (via analytics tools)</li>
+    <li>Communications you send to us by email, phone or through our website</li>
+  </ul>
+
+  <h2>How we use your information</h2>
+  <p>We use your personal information for the following purposes:</p>
+  <ul>
+    <li>To respond to your enquiries and provide the products and services you request</li>
+    <li>To manage your account and maintain our business relationship with you</li>
+    <li>To send service-related communications such as engineer visit confirmations and contract renewals</li>
+    <li>To improve our website and services based on how visitors use them</li>
+    <li>To comply with our legal and regulatory obligations</li>
+    <li>To send marketing communications where you have given us permission to do so</li>
+  </ul>
+
+  <h2>Legal basis for processing</h2>
+  <p>We process your personal data on the following legal grounds:</p>
+  <ul>
+    <li><strong>Contract:</strong> where processing is necessary to fulfil a contract with you or to take steps prior to entering into a contract</li>
+    <li><strong>Legitimate interests:</strong> where we have a legitimate business interest in processing your data, such as responding to enquiries or improving our services</li>
+    <li><strong>Consent:</strong> where you have given us clear consent to process your data for a specific purpose, such as marketing communications</li>
+    <li><strong>Legal obligation:</strong> where we are required to process your data to comply with the law</li>
+  </ul>
+
+  <h2>How we share your information</h2>
+  <p>We do not sell your personal data to third parties. We may share your information with:</p>
+  <ul>
+    <li>Our technology partners and suppliers where necessary to provide our services (such as Kyocera, Konica Minolta and PaperCut)</li>
+    <li>Finance partners (PEAC Financial Services and CF Corporate) where you request finance or leasing arrangements</li>
+    <li>IT support partners (Hi-Impact) where necessary to deliver technical services</li>
+    <li>Professional advisers including lawyers, accountants and insurers</li>
+    <li>HMRC and other regulatory authorities where required by law</li>
+  </ul>
+  <p>All third parties are required to maintain the security of your information and process it only as instructed by us.</p>
+
+  <h2>How long we keep your information</h2>
+  <p>We retain your personal data only for as long as necessary to fulfil the purposes for which it was collected, including for the purposes of satisfying any legal, accounting or reporting requirements. Typically:</p>
+  <ul>
+    <li>Customer account records are retained for 7 years after the end of the business relationship</li>
+    <li>Enquiry and contact form data is retained for 2 years</li>
+    <li>Marketing preferences are retained until you withdraw consent</li>
+  </ul>
+
+  <h2>Your rights</h2>
+  <p>Under UK GDPR you have the following rights regarding your personal data:</p>
+  <ul>
+    <li><strong>Right to access:</strong> you can request a copy of the personal data we hold about you</li>
+    <li><strong>Right to rectification:</strong> you can ask us to correct inaccurate or incomplete data</li>
+    <li><strong>Right to erasure:</strong> you can ask us to delete your personal data in certain circumstances</li>
+    <li><strong>Right to restrict processing:</strong> you can ask us to limit how we use your data</li>
+    <li><strong>Right to data portability:</strong> you can request your data in a machine-readable format</li>
+    <li><strong>Right to object:</strong> you can object to processing based on legitimate interests or for marketing purposes</li>
+  </ul>
+  <p>To exercise any of these rights, please contact us at <strong>enquiries&#64;elitegrouplca&#46;com</strong> or by post to our registered address above.</p>
+
+  <h2>Cookies</h2>
+  <p>Our website uses cookies to improve your experience and to help us understand how visitors use the site. Cookies are small text files stored on your device. We use:</p>
+  <ul>
+    <li><strong>Essential cookies:</strong> required for the website to function correctly</li>
+    <li><strong>Analytics cookies:</strong> to understand how visitors interact with our website (we use anonymised data only)</li>
+  </ul>
+  <p>You can control cookies through your browser settings. Disabling cookies may affect the functionality of our website.</p>
+
+  <h2>Data security</h2>
+  <p>We take the security of your personal data seriously and have implemented appropriate technical and organisational measures to protect it against unauthorised access, loss or destruction. However, no method of transmission over the internet is completely secure and we cannot guarantee absolute security.</p>
+
+  <h2>Third party websites</h2>
+  <p>Our website may contain links to third party websites. We are not responsible for the privacy practices of those websites and recommend you review their privacy policies before providing any personal information.</p>
+
+  <h2>Changes to this policy</h2>
+  <p>We may update this Privacy Policy from time to time. Any changes will be posted on this page with an updated date. We encourage you to review this policy periodically.</p>
+
+  <h2>Contact us</h2>
+  <p>If you have any questions about this Privacy Policy or how we handle your personal data, please contact us:</p>
+  <ul>
+    <li><strong>Email:</strong> enquiries&#64;elitegrouplca&#46;com</li>
+    <li><strong>Phone:</strong> <a href="tel:01513178848">0151 317 8848</a></li>
+    <li><strong>Post:</strong> Elite Group LCA Ltd, Unit 2 Commerce Park, Campbeltown Road, Birkenhead, CH41 9HP</li>
+  </ul>
+  <p>You also have the right to lodge a complaint with the Information Commissioner&rsquo;s Office (ICO) if you believe we have not handled your data correctly. Visit <a href="https://ico.org.uk" target="_blank">ico.org.uk</a> for more information.</p>
+</div>
 
 <footer>
   <div class="footer-inner">
@@ -408,9 +192,9 @@ footer{background:var(--g900);padding:56px 24px 32px}
         <div class="footer-strapline">Print with Confidence every time</div>
       </div>
       <div class="footer-cols">
-        <div class="footer-col"><h4>Services</h4><ul><li><a href="managed-print.html">Managed Print</a></li><li><a href="account-management.html">Account Management</a></li><li><a href="elite-service.html">Elite Service</a></li><li><a href="services.html">All Services</a></li></ul></div>
-        <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Elite</a></li><li><a href="products.html">Products</a></li><li><a href="contact.html">Contact</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li></ul></div>
-        <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:01513178848">0151 317 8848</a></li><li><a href="contact.html">Email Us</a></li><li><a href="contact.html">Get a Quote</a></li><li><a href="elite-service.html">Log a Call</a></li></ul></div>
+        <div class="footer-col"><h4>Products</h4><ul><li><a href="products.html">Copiers</a></li><li><a href="products.html">Printers</a></li><li><a href="products.html">Production</a></li><li><a href="products.html">Audio / Visual</a></li><li><a href="managed-print.html">Managed Print</a></li></ul></div>
+        <div class="footer-col"><h4>Company</h4><ul><li><a href="about.html">About Elite</a></li><li><a href="elite-service.html">Elite Service</a></li><li><a href="services.html">Services</a></li><li><a href="contact.html">Contact Us</a></li><li><a href="privacy-policy.html">Privacy Policy</a></li></ul></div>
+        <div class="footer-col"><h4>Contact</h4><ul><li><a href="tel:01513178848">0151 317 8848</a></li><li><a href="contact.html">Email Us</a></li><li><a href="contact.html">Get a Quote</a></li><li><a href="elite-service.html">SOS Support</a></li></ul></div>
       </div>
     </div>
     <div class="footer-bottom">
@@ -430,29 +214,6 @@ const navEl = document.querySelector('nav');
 new IntersectionObserver(function(entries){
   navEl.classList.toggle('scrolled', !entries[0].isIntersecting);
 }, {threshold:0.05}).observe(document.querySelector('.hero'));
-
-const obs = new IntersectionObserver(function(entries){
-  entries.forEach(function(e, i){
-    if(e.isIntersecting){ setTimeout(function(){ e.target.classList.add('visible'); }, i * 80); obs.unobserve(e.target); }
-  });
-}, {threshold:0.1});
-document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
-
-function handleSubmit(e){
-  e.preventDefault();
-  var form = e.target;
-  var data = new FormData(form);
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', form.action);
-  xhr.setRequestHeader('Accept', 'application/json');
-  xhr.onreadystatechange = function(){
-    if(xhr.readyState === 4){
-      form.style.display = 'none';
-      document.getElementById('form-success-am').style.display = 'block';
-    }
-  };
-  xhr.send(data);
-}
 </script>
 </body>
 </html>
