@@ -67,17 +67,16 @@ section{padding:100px 24px}
 /* HOW TO LOG -->
 .log-section{background:var(--g50);border-top:1px solid var(--g100)}
 .log-options{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
-.log-options{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px}
-.log-card{border-radius:28px;padding:44px 36px;text-align:center;display:flex;flex-direction:column;align-items:center;transition:transform .3s}
+.log-card{border-radius:24px;padding:36px 28px;text-align:center;display:flex;flex-direction:column;align-items:center;transition:transform .3s}
 .log-card:hover{transform:translateY(-4px)}
-.log-step{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:24px}
-.log-icon-circle{width:80px;height:80px;border-radius:9999px;background:var(--white);border:1px solid var(--g100);display:flex;align-items:center;justify-content:center;font-size:34px;margin-bottom:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06)}
-.log-icon-circle.sos{background:rgba(232,53,58,0.06);border:1px solid rgba(232,53,58,0.15)}
-.log-card h3{font-size:19px;font-weight:700;color:var(--g900);margin-bottom:10px;letter-spacing:-.01em}
-.log-card p{font-size:14px;font-weight:300;color:var(--g400);line-height:1.65;margin-bottom:32px;flex:1}
-.log-btn{display:flex;align-items:center;justify-content:center;background:var(--g900);color:#fff;padding:13px 24px;border-radius:9999px;font-size:14px;font-weight:700;text-decoration:none;transition:all .2s;width:100%;box-shadow:0 2px 12px rgba(0,0,0,0.12)}
-.log-btn:hover{background:var(--g600);transform:scale(1.02)}
-.log-btn.red{background:var(--red);box-shadow:0 4px 16px rgba(232,53,58,0.3)}
+.log-step{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:18px}
+.log-icon-circle{width:64px;height:64px;border-radius:9999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:18px}
+.log-icon-circle.sos{background:rgba(232,53,58,0.12);border:1px solid rgba(232,53,58,0.25)}
+.log-card h3{font-size:18px;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:-.01em}
+.log-card p{font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:28px;flex:1}
+.log-btn{display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 24px;border-radius:9999px;font-size:14px;font-weight:700;text-decoration:none;transition:all .2s;width:100%}
+.log-btn:hover{background:rgba(255,255,255,0.18)}
+.log-btn.red{background:var(--red);border-color:var(--red);box-shadow:0 4px 16px rgba(232,53,58,0.35)}
 .log-btn.red:hover{background:var(--red-deep)}
 /* CALL LOGGING FORM */
 .call-form-section{background:var(--white);border-top:1px solid var(--g100);padding:100px 24px}
@@ -368,35 +367,45 @@ footer{background:var(--g900);padding:56px 24px 32px}
 </section>
 
 <!-- HOW TO LOG -->
-<section class="log-section">
+<section style="background:var(--g900);padding:100px 24px">
   <div class="wrap-wide">
     <div style="text-align:center" class="reveal">
-      <p class="eyebrow">How to Log a Call</p>
-      <h2 class="sec-title">Three ways to reach us.</h2>
-      <p class="sec-body" style="text-align:center;margin:16px auto 0;max-width:480px">Use whichever method works best for you — all calls are logged, tracked and responded to within our SLA.</p>
+      <p class="eyebrow" style="color:rgba(255,255,255,0.4)">How to Log a Call</p>
+      <h2 class="sec-title" style="color:#fff">Three ways to reach us.</h2>
+      <p style="font-size:18px;font-weight:300;color:rgba(255,255,255,0.5);line-height:1.65;margin-top:16px;text-align:center;max-width:480px;margin-left:auto;margin-right:auto">Use whichever method works best for you &mdash; all calls are logged, tracked and responded to within our SLA.</p>
     </div>
-    <div class="log-options reveal">
-      <div class="log-card lg">
-        <p class="log-step">01</p>
-        <div class="log-icon-circle">&#128221;</div>
-        <h3>Log online</h3>
-        <p>Use our online form below to log a support call. Ideal for non-urgent issues — we&rsquo;ll confirm receipt and respond within our SLA.</p>
-        <a href="#log-call" class="log-btn">Log a call &darr;</a>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:56px" class="reveal">
+
+      <!-- Log Online -->
+      <div style="background:rgba(255,255,255,0.06);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:1px solid rgba(255,255,255,0.14);border-radius:24px;padding:40px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;transition:transform .3s">
+        <div style="position:absolute;top:0;left:8%;width:84%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3) 40%,rgba(255,255,255,0.3) 60%,transparent)"></div>
+        <p style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:20px">01</p>
+        <div style="width:68px;height:68px;border-radius:9999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px">&#128221;</div>
+        <h3 style="font-size:19px;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:-.01em">Log online</h3>
+        <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:32px;flex:1">Use our online form below to log a support call. Ideal for non-urgent issues &mdash; we&rsquo;ll confirm receipt and respond within our SLA.</p>
+        <a href="#log-call" style="display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2);padding:12px 24px;border-radius:9999px;font-size:14px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;transition:all .2s">Log a call &darr;</a>
       </div>
-      <div class="log-card lg">
-        <p class="log-step">02</p>
-        <div class="log-icon-circle">&#128222;</div>
-        <h3>Call us</h3>
-        <p>Call our support team directly. A real person answers within 30 seconds and will triage your issue immediately.</p>
-        <a href="tel:01513178848" class="log-btn red">0151 317 8848</a>
+
+      <!-- Call Us -->
+      <div style="background:rgba(255,255,255,0.06);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:1px solid rgba(255,255,255,0.14);border-radius:24px;padding:40px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;transition:transform .3s">
+        <div style="position:absolute;top:0;left:8%;width:84%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3) 40%,rgba(255,255,255,0.3) 60%,transparent)"></div>
+        <p style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:20px">02</p>
+        <div style="width:68px;height:68px;border-radius:9999px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px">&#128222;</div>
+        <h3 style="font-size:19px;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:-.01em">Call us</h3>
+        <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:32px;flex:1">Call our support team directly. A real person answers within 30 seconds and will triage your issue immediately.</p>
+        <a href="tel:01513178848" style="display:flex;align-items:center;justify-content:center;background:var(--red);color:#fff;border:1px solid var(--red);padding:12px 24px;border-radius:9999px;font-size:14px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;box-shadow:0 4px 16px rgba(232,53,58,0.35);transition:all .2s">0151 317 8848</a>
       </div>
-      <div class="log-card lg">
-        <p class="log-step">03</p>
-        <div class="log-icon-circle sos">&#128680;</div>
-        <h3>SOS line</h3>
-        <p>Machine completely down and can&rsquo;t wait? Call our priority SOS line for immediate escalation and fastest possible response.</p>
-        <a href="tel:01515564628" class="log-btn red">0151 556 4628</a>
+
+      <!-- SOS Line -->
+      <div style="background:rgba(255,255,255,0.06);backdrop-filter:blur(10px) saturate(160%);-webkit-backdrop-filter:blur(10px) saturate(160%);border:1px solid rgba(255,255,255,0.14);border-radius:24px;padding:40px 32px;text-align:center;display:flex;flex-direction:column;align-items:center;position:relative;overflow:hidden;transition:transform .3s">
+        <div style="position:absolute;top:0;left:8%;width:84%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.3) 40%,rgba(255,255,255,0.3) 60%,transparent)"></div>
+        <p style="font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--red);margin-bottom:20px">03</p>
+        <div style="width:68px;height:68px;border-radius:9999px;background:rgba(232,53,58,0.12);border:1px solid rgba(232,53,58,0.3);display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:20px">&#128680;</div>
+        <h3 style="font-size:19px;font-weight:700;color:#fff;margin-bottom:10px;letter-spacing:-.01em">SOS line</h3>
+        <p style="font-size:14px;font-weight:300;color:rgba(255,255,255,0.55);line-height:1.65;margin-bottom:32px;flex:1">Machine completely down and can&rsquo;t wait? Call our priority SOS line for immediate escalation and fastest possible response.</p>
+        <a href="tel:01515564628" style="display:flex;align-items:center;justify-content:center;background:var(--red);color:#fff;border:1px solid var(--red);padding:12px 24px;border-radius:9999px;font-size:14px;font-weight:700;text-decoration:none;width:100%;box-sizing:border-box;box-shadow:0 4px 16px rgba(232,53,58,0.35);transition:all .2s">0151 556 4628</a>
       </div>
+
     </div>
   </div>
 </section>
