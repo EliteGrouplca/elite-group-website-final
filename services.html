@@ -42,7 +42,7 @@ nav.scrolled{background:rgba(255,255,255,0.18);backdrop-filter:blur(12px) satura
 
 /* HERO */
 .hero{min-height:560px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:160px 24px 100px;position:relative;overflow:hidden;background:var(--white)}
-.hero-sky{position:absolute;bottom:0;left:0;width:100%;pointer-events:none;z-index:0;line-height:0;height:140px;overflow:hidden}
+.hero-sky{position:absolute;bottom:0;left:0;width:100%;pointer-events:none;z-index:0;line-height:0;max-height:22%}
 .hero-sky svg{display:block;width:100%}
 .hero-content{position:relative;z-index:1}
 .hero-eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--red);margin-bottom:20px;opacity:0;animation:fadeUp .7s .1s forwards}
@@ -165,7 +165,7 @@ footer{background:var(--g900);padding:56px 24px 32px}
 <!-- HERO -->
 <section class="hero">
   <div class="hero-sky">
-    <svg viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax slice" style="width:100%;height:140px;" xmlns="http://www.w3.org/2000/svg">
+    <svg viewBox="0 0 1440 260" preserveAspectRatio="xMidYMax meet" xmlns="http://www.w3.org/2000/svg">
       <defs>
         <linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="#555555" stop-opacity="0.35"/>
