@@ -423,15 +423,15 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
         <div id="form-sales">
           <form class="glass-form lg" action="https://formspree.io/f/xdapkvbn" method="POST" onsubmit="handleSubmit(event,'sales')">
             <div class="form-row">
-              <div class="form-group"><label>First Name</label><input type="text" placeholder="Jane" required/></div>
-              <div class="form-group"><label>Last Name</label><input type="text" placeholder="Smith" required/></div>
+              <div class="form-group"><label>First Name</label><input type="text" name="first_name" placeholder="Jane" required/></div>
+              <div class="form-group"><label>Last Name</label><input type="text" name="last_name" placeholder="Smith" required/></div>
             </div>
-            <div class="form-group"><label>Organisation</label><input type="text" placeholder="Your school or business" required/></div>
-            <div class="form-group"><label>Email Address</label><input type="email" placeholder="jane@organisation.com" required/></div>
-            <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="07700 000000"/></div>
+            <div class="form-group"><label>Organisation</label><input type="text" name="organisation" placeholder="Your school or business" required/></div>
+            <div class="form-group"><label>Email Address</label><input type="email" name="email" placeholder="jane@organisation.com" required/></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="07700 000000"/></div>
             <div class="form-group">
               <label>I&rsquo;m interested in</label>
-              <select>
+              <select name="interest">
                 <option value="">Select a product or service...</option>
                 <option>Multifunction Copiers</option>
                 <option>Desktop Printers</option>
@@ -443,7 +443,7 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
                 <option>General Enquiry</option>
               </select>
             </div>
-            <div class="form-group"><label>Tell us more</label><textarea placeholder="Tell us about your current setup, volume and what you're looking for..."></textarea></div>
+            <div class="form-group"><label>Tell us more</label><textarea name="message" placeholder="Tell us about your current setup, volume and what you're looking for..."></textarea></div>
             <button type="submit">Send Enquiry &rarr;</button>
           </form>
           <div class="form-success" id="success-sales">
@@ -457,18 +457,18 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
         <div id="form-support" style="display:none">
           <form class="glass-form lg" action="https://formspree.io/f/mgopvbdl" method="POST" onsubmit="handleSubmit(event,'support')">
             <div class="form-row">
-              <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" required/></div>
-              <div class="form-group"><label>Phone</label><input type="tel" placeholder="Best number to reach you" required/></div>
+              <div class="form-group"><label>Name</label><input type="text" name="name" placeholder="Your name" required/></div>
+              <div class="form-group"><label>Phone</label><input type="tel" name="phone" placeholder="Best number to reach you" required/></div>
             </div>
-            <div class="form-group"><label>Organisation</label><input type="text" placeholder="Your school or business" required/></div>
-            <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com" required/></div>
+            <div class="form-group"><label>Organisation</label><input type="text" name="organisation" placeholder="Your school or business" required/></div>
+            <div class="form-group"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com" required/></div>
             <div class="form-group">
               <label>Device / Machine</label>
-              <input type="text" placeholder="e.g. Kyocera TASKalfa 4002i"/>
+              <input type="text" name="device" placeholder="e.g. Kyocera TASKalfa 4002i"/>
             </div>
             <div class="form-group">
               <label>Issue Type</label>
-              <select>
+              <select name="issue_type">
                 <option value="">Select issue type...</option>
                 <option>Machine not printing</option>
                 <option>Paper jam / feed issue</option>
@@ -480,7 +480,7 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
                 <option>Other</option>
               </select>
             </div>
-            <div class="form-group"><label>Describe the issue</label><textarea placeholder="Please describe the problem and any error messages shown..."></textarea></div>
+            <div class="form-group"><label>Describe the issue</label><textarea name="message" placeholder="Please describe the problem and any error messages shown..."></textarea></div>
             <button type="submit">Submit Support Request &rarr;</button>
           </form>
           <div class="form-success" id="success-support">
@@ -494,15 +494,15 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
         <div id="form-finance" style="display:none">
           <form class="glass-form lg" action="https://formspree.io/f/mgopvbdl" method="POST" onsubmit="handleSubmit(event,'finance')">
             <div class="form-row">
-              <div class="form-group"><label>Name</label><input type="text" placeholder="Your name" required/></div>
-              <div class="form-group"><label>Job Title</label><input type="text" placeholder="e.g. Business Manager"/></div>
+              <div class="form-group"><label>Name</label><input type="text" name="name" placeholder="Your name" required/></div>
+              <div class="form-group"><label>Job Title</label><input type="text" name="job_title" placeholder="e.g. Business Manager"/></div>
             </div>
-            <div class="form-group"><label>Organisation</label><input type="text" placeholder="Your organisation" required/></div>
-            <div class="form-group"><label>Email Address</label><input type="email" placeholder="your@email.com" required/></div>
-            <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="07700 000000"/></div>
+            <div class="form-group"><label>Organisation</label><input type="text" name="organisation" placeholder="Your organisation" required/></div>
+            <div class="form-group"><label>Email Address</label><input type="email" name="email" placeholder="your@email.com" required/></div>
+            <div class="form-group"><label>Phone Number</label><input type="tel" name="phone" placeholder="07700 000000"/></div>
             <div class="form-group">
               <label>Finance Option of Interest</label>
-              <select>
+              <select name="finance_option">
                 <option value="">Select an option...</option>
                 <option>Operating Lease Agreement</option>
                 <option>Finance Lease</option>
@@ -511,8 +511,8 @@ footer{background:var(--g900);padding:56px 24px 32px;border-top:1px solid rgba(2
                 <option>Not sure &mdash; need advice</option>
               </select>
             </div>
-            <div class="form-group"><label>Equipment Required</label><input type="text" placeholder="e.g. 3x Kyocera A3 Copiers"/></div>
-            <div class="form-group"><label>Additional Information</label><textarea placeholder="Any other details about your budget or requirements..."></textarea></div>
+            <div class="form-group"><label>Equipment Required</label><input type="text" name="equipment" placeholder="e.g. 3x Kyocera A3 Copiers"/></div>
+            <div class="form-group"><label>Additional Information</label><textarea name="message" placeholder="Any other details about your budget or requirements..."></textarea></div>
             <button type="submit">Send Finance Enquiry &rarr;</button>
           </form>
           <div class="form-success" id="success-finance">
