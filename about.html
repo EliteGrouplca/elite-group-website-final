@@ -206,6 +206,18 @@ footer{background:var(--g900);padding:56px 24px 32px}
     <span id="mb3"></span>
   </button>
 </nav>
+<div class="mob-menu" id="mobMenu">
+  <a href="index.html" onclick="closeMenu()">Home</a>
+  <a href="about.html" class="active" onclick="closeMenu()">About</a>
+  <a href="products.html" onclick="closeMenu()">Products</a>
+  <a href="services.html" onclick="closeMenu()">Services</a>
+  <a href="managed-print.html" onclick="closeMenu()">Managed Print</a>
+  <a href="contact.html" onclick="closeMenu()">Contact</a>
+  <div class="mob-cta">
+    <a href="contact.html" class="btn-outline" onclick="closeMenu()">Get a Quote</a>
+    <a href="tel:01513178848" class="btn-fill">Call Us</a>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -583,6 +595,32 @@ const obs = new IntersectionObserver(function(entries){
   });
 }, {threshold:0.1});
 document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+
+var menuOpen = false;
+function toggleMenu(){
+  menuOpen = !menuOpen;
+  var menu = document.getElementById('mobMenu');
+  if(menu){ menu.classList.toggle('open', menuOpen); }
+  var mb1 = document.getElementById('mb1');
+  var mb2 = document.getElementById('mb2');
+  var mb3 = document.getElementById('mb3');
+  if(mb1){ mb1.style.transform = menuOpen ? 'rotate(45deg) translate(5px,5px)' : ''; }
+  if(mb2){ mb2.style.opacity = menuOpen ? '0' : '1'; }
+  if(mb3){ mb3.style.transform = menuOpen ? 'rotate(-45deg) translate(5px,-5px)' : ''; }
+  document.body.style.overflow = menuOpen ? 'hidden' : '';
+}
+function closeMenu(){
+  menuOpen = false;
+  var menu = document.getElementById('mobMenu');
+  if(menu){ menu.classList.remove('open'); }
+  var mb1 = document.getElementById('mb1');
+  var mb2 = document.getElementById('mb2');
+  var mb3 = document.getElementById('mb3');
+  if(mb1){ mb1.style.transform = ''; }
+  if(mb2){ mb2.style.opacity = '1'; }
+  if(mb3){ mb3.style.transform = ''; }
+  document.body.style.overflow = '';
+}
 </script>
 </body>
 </html>
