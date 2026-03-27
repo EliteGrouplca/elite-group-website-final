@@ -1045,7 +1045,7 @@ input[type=range]{width:100%;margin-top:12px;accent-color:var(--red)}
           <div class="ci"><div class="ci-icon">&#128336;</div><div><p class="ci-label">Hours</p><p class="ci-val">Mon&ndash;Fri: 9:00 &ndash; 17:00</p></div></div>
         </div>
       </div>
-      <form class="glass-form lg reveal" action="https://formspree.io/f/xdapkvbn" method="POST" onsubmit="handleSubmit(event)">
+      <form class="glass-form lg reveal" onsubmit="handleSubmit(event)">
         <div class="form-row">
           <input type="text" placeholder="Name" required/>
           <input type="email" placeholder="Email" required/>
@@ -1114,20 +1114,9 @@ document.querySelectorAll('.product-panel:not(.active)').forEach(function(p){ p.
 // CONTACT FORM
 function handleSubmit(e){
   e.preventDefault();
-  var form = e.target;
-  var data = new FormData(form);
-  var xhr = new XMLHttpRequest();
-  xhr.open('POST', form.action);
-  xhr.setRequestHeader('Accept', 'application/json');
-  xhr.onreadystatechange = function(){
-    if(xhr.readyState === 4){
-      var btn = form.querySelector('button');
-      btn.textContent = 'Message Sent ✓';
-      form.reset();
-      setTimeout(function(){ btn.textContent = 'Send Message →'; }, 4000);
-    }
-  };
-  xhr.send(data);
+  var btn = e.target.querySelector('button');
+  btn.textContent = 'Message Sent ✓';
+  setTimeout(function(){ btn.textContent = 'Send Message →'; e.target.reset(); }, 3000);
 }
 
 // SAVINGS COUNTER
