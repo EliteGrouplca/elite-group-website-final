@@ -1,0 +1,24 @@
+{
+  "name": "elite-group-website",
+  "version": "1.0.0",
+  "description": "Elite Group Print Management Solutions - Static Website with Vercel Web Analytics",
+  "private": true,
+  "scripts": {
+    "dev": "npx http-server -p 3000",
+    "start": "npx http-server -p 3000"
+  },
+  "keywords": [
+    "print-management",
+    "elite-group",
+    "static-website"
+  ],
+  "author": "Elite Group",
+  "license": "UNLICENSED",
+  "devDependencies": {},
+  "dependencies": {},
+  "notes": {
+    "analytics": "Vercel Web Analytics is integrated via script tags in HTML files (static site implementation)",
+    "integration": "Analytics scripts are added to the <head> section of all HTML pages",
+    "documentation": "https://vercel.com/docs/analytics/quickstart"
+  }
+}
