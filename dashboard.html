@@ -1,0 +1,1389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Elite · Command Centre</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --r:#E8353A;--r2:#ff2d32;--rg:rgba(232,53,58,0.15);
+  --bg:#0d0f14;--bg2:#141720;--bg3:#1a1e28;--bg4:#1f2433;
+  --cyan:#00d4ff;--cyan2:rgba(0,212,255,0.15);
+  --purple:#7c3aed;--purple2:rgba(124,58,237,0.15);
+  --green:#00ff88;--green2:rgba(0,255,136,0.12);
+  --amber:#ffb800;--amber2:rgba(255,184,0,0.12);
+  --pink:#ff2d78;--pink2:rgba(255,45,120,0.12);
+  --blue:#4d9fff;--blue2:rgba(77,159,255,0.12);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.12);
+  --t:#ffffff;--t2:rgba(255,255,255,0.6);--t3:rgba(255,255,255,0.3);
+  --f:'Inter',system-ui,sans-serif;
+}
+html,body{height:100%;background:var(--bg);color:var(--t);font-family:var(--f);overflow:hidden;-webkit-font-smoothing:antialiased}
+
+/* Animated background */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(232,53,58,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,212,255,0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 60% 30%, rgba(124,58,237,0.05) 0%, transparent 60%);
+  pointer-events:none;z-index:0;
+}
+
+.app{display:grid;grid-template-columns:220px 1fr;height:100vh;position:relative;z-index:1}
+
+/* SIDEBAR */
+.sidebar{
+  background:rgba(20,23,32,0.9);
+  border-right:1px solid var(--b);
+  backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.sb-logo{padding:20px 18px;border-bottom:1px solid var(--b);display:flex;align-items:center;gap:12px}
+.sb-e{
+  width:36px;height:36px;border-radius:10px;
+  background:linear-gradient(135deg,var(--r),#ff6060);
+  display:flex;align-items:center;justify-content:center;
+  font-size:17px;font-weight:800;color:#fff;
+  box-shadow:0 4px 16px rgba(232,53,58,0.4);
+}
+.sb-brand{font-size:13px;font-weight:700;letter-spacing:-.01em}
+.sb-sub{font-size:10px;color:var(--t3);margin-top:1px}
+.sb-nav{padding:14px 12px;flex:1}
+.sb-sec{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.12em;padding:8px 8px 5px}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:10px;cursor:pointer;font-size:13px;font-weight:500;color:var(--t2);transition:all .18s;margin-bottom:1px}
+.ni:hover{background:rgba(255,255,255,0.05);color:var(--t)}
+.ni.active{background:var(--rg);color:var(--r);font-weight:600}
+.ni-ic{width:26px;height:26px;border-radius:7px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.ni.active .ni-ic{background:var(--r);box-shadow:0 2px 10px rgba(232,53,58,0.4)}
+.sb-foot{padding:16px 18px;border-top:1px solid var(--b);display:flex;align-items:center;gap:10px}
+.sb-av{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--r),#ff6b6b);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.sb-fn{font-size:12px;font-weight:600}
+.sb-fr{font-size:10px;color:var(--t3)}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);margin-left:auto;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden}
+.topbar{
+  background:rgba(13,15,20,0.9);
+  border-bottom:1px solid var(--b);
+  backdrop-filter:blur(20px);
+  padding:0 28px;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.tb-title{font-size:16px;font-weight:700;letter-spacing:-.02em}
+.tb-right{display:flex;align-items:center;gap:14px}
+.tb-clock{font-size:12px;color:var(--t3);font-variant-numeric:tabular-nums}
+.tb-badge{background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);font-size:10px;font-weight:700;padding:3px 10px;border-radius:9999px;letter-spacing:.06em}
+
+.content{flex:1;overflow-y:auto;padding:24px}
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp .25s cubic-bezier(.4,0,.2,1)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS */
+.card{
+  background:var(--bg2);
+  border:1px solid var(--b);
+  border-radius:18px;
+  padding:22px;
+  position:relative;overflow:hidden;
+}
+.card::after{content:'';position:absolute;top:0;left:15%;width:70%;height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.07),transparent)}
+.card-glow-r{box-shadow:0 0 40px rgba(232,53,58,0.08) inset}
+.card-glow-c{box-shadow:0 0 40px rgba(0,212,255,0.06) inset}
+.card-glow-p{box-shadow:0 0 40px rgba(124,58,237,0.07) inset}
+.card-glow-g{box-shadow:0 0 40px rgba(0,255,136,0.06) inset}
+.ct{font-size:10px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+
+/* STAT TILES */
+.tile{background:var(--bg2);border:1px solid var(--b);border-radius:16px;padding:20px;position:relative;overflow:hidden;transition:all .2s;cursor:default}
+.tile:hover{border-color:var(--b2);transform:translateY(-3px)}
+.tile-accent{position:absolute;top:0;left:0;right:0;height:2px;border-radius:2px 2px 0 0}
+.tile-icon{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:18px;margin-bottom:14px}
+.tile-n{font-size:30px;font-weight:800;letter-spacing:-.04em;line-height:1}
+.tile-label{font-size:11px;color:var(--t3);margin-top:8px;font-weight:500;text-transform:uppercase;letter-spacing:.06em}
+.tile-change{font-size:11px;font-weight:600;margin-top:5px}
+
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.mb20{margin-bottom:20px}.mt20{margin-top:20px}.mt14{margin-top:14px}
+.row{display:flex;align-items:center;justify-content:space-between}
+.ph{margin-bottom:24px}
+.ph h1{font-size:26px;font-weight:800;letter-spacing:-.04em;background:linear-gradient(135deg,#fff 40%,rgba(255,255,255,0.55));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.ph p{font-size:12px;color:var(--t3);margin-top:5px}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:9999px;font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all .2s;font-family:var(--f)}
+.btn-p{background:linear-gradient(135deg,var(--r),var(--r2));color:#fff;box-shadow:0 4px 16px rgba(232,53,58,0.35)}
+.btn-p:hover{box-shadow:0 6px 24px rgba(232,53,58,0.5);transform:translateY(-1px)}
+.btn-s{background:rgba(255,255,255,0.07);color:var(--t2);border:1px solid var(--b)}
+.btn-s:hover{background:rgba(255,255,255,0.1);color:var(--t)}
+.btn-xs{padding:5px 12px;font-size:11px}
+
+/* CHART CONTAINERS */
+.chart-wrap{position:relative;width:100%}
+.chart-wrap canvas{width:100%!important}
+
+/* TABLE */
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th{text-align:left;padding:10px 14px;font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;border-bottom:1px solid var(--b)}
+.tbl td{padding:12px 14px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--t2)}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,0.03);color:var(--t)}
+
+/* BADGES */
+.bx{display:inline-flex;align-items:center;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:600;letter-spacing:.04em}
+.bx-g{background:var(--green2);color:var(--green)}
+.bx-r{background:var(--rg);color:var(--r)}
+.bx-y{background:var(--amber2);color:var(--amber)}
+.bx-b{background:var(--blue2);color:var(--blue)}
+.bx-c{background:var(--cyan2);color:var(--cyan)}
+.bx-n{background:rgba(255,255,255,0.07);color:var(--t3)}
+
+/* FORMS */
+.fg{margin-bottom:14px}
+.fl{font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;display:block}
+.fi{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;transition:all .2s}
+.fi:focus{border-color:rgba(232,53,58,0.5);background:rgba(232,53,58,0.05);box-shadow:0 0 0 3px rgba(232,53,58,0.08)}
+.fs{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;cursor:pointer}
+.fs option{background:var(--bg3)}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(12px);z-index:200;display:none;align-items:center;justify-content:center}
+.mo.open{display:flex}
+.md{background:var(--bg3);border:1px solid var(--b2);border-radius:22px;padding:30px;width:520px;max-width:94vw;max-height:86vh;overflow-y:auto;box-shadow:0 40px 80px rgba(0,0,0,0.5),0 0 60px rgba(232,53,58,0.06);position:relative}
+.md::after{content:'';position:absolute;top:0;left:10%;width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(232,53,58,0.3),transparent)}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:22px}
+.mh h2{font-size:18px;font-weight:700;letter-spacing:-.02em}
+.mc{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid var(--b);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--t3);font-size:13px;transition:all .2s}
+.mc:hover{background:rgba(255,255,255,0.1);color:var(--t)}
+
+/* KANBAN */
+.kb{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;align-items:start}
+.kc{background:var(--bg2);border:1px solid var(--b);border-radius:14px;padding:14px}
+.kct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+.kd{background:var(--bg3);border:1px solid var(--b);border-radius:10px;padding:13px;margin-bottom:8px;transition:all .2s;cursor:pointer;position:relative;overflow:hidden}
+.kd::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--r);opacity:0;transition:opacity .2s}
+.kd:hover{border-color:var(--b2);transform:translateY(-2px)}
+.kd:hover::before{opacity:1}
+.kd-n{font-size:13px;font-weight:600;margin-bottom:4px}
+.kd-s{font-size:11px;color:var(--t3)}
+
+/* CHAT */
+.cw{display:flex;flex-direction:column}
+.cm{overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:86%;padding:12px 16px;border-radius:16px;font-size:13px;line-height:1.6}
+.msg.u{background:linear-gradient(135deg,var(--r),var(--r2));color:#fff;align-self:flex-end;border-bottom-right-radius:4px;box-shadow:0 4px 16px rgba(232,53,58,0.25)}
+.msg.a{background:var(--bg3);color:var(--t2);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--b)}
+.ci{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--b);background:var(--bg2);border-radius:0 0 18px 18px}
+.ci input{flex:1;background:rgba(255,255,255,0.06);border:1px solid var(--b);border-radius:12px;padding:10px 16px;font-size:13px;color:var(--t);font-family:var(--f);outline:none;transition:all .2s}
+.ci input:focus{border-color:rgba(232,53,58,0.4);background:rgba(232,53,58,0.05)}
+.cs{background:linear-gradient(135deg,var(--r),var(--r2));color:#fff;border:none;border-radius:12px;padding:10px 20px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 12px rgba(232,53,58,0.3);transition:all .2s;font-family:var(--f)}
+.cs:hover{box-shadow:0 4px 20px rgba(232,53,58,0.5)}
+
+/* ROW ITEMS */
+.ri{display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--b);border-radius:12px;margin-bottom:8px;transition:all .2s}
+.ri:hover{border-color:var(--b2);background:var(--bg4)}
+.ris{font-size:12px;font-weight:700;width:68px;color:var(--t)}
+.rip{font-size:14px;font-weight:700;flex:1}
+.ric{font-size:11px;font-weight:600}
+.pos{color:var(--green);text-shadow:0 0 8px rgba(0,255,136,0.4)}
+.neg{color:var(--r)}
+
+/* PROGRESS */
+.pb{background:rgba(255,255,255,0.07);border-radius:9999px;height:6px;overflow:hidden;margin-top:8px}
+.pf{height:6px;background:linear-gradient(90deg,var(--r),var(--amber),var(--green));border-radius:9999px;transition:width 1s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(232,53,58,0.4)}
+
+/* TASK */
+.ti{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--bg3);border:1px solid var(--b);border-radius:10px;margin-bottom:8px;transition:all .2s}
+.ti:hover{border-color:var(--b2)}
+.tc{width:17px;height:17px;border:1.5px solid var(--b2);border-radius:5px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s}
+.tc:hover{border-color:var(--green)}
+.tc.done{background:var(--green);border-color:var(--green);color:#000}
+.tt{flex:1;font-size:13px;color:var(--t2)}
+.tt.done{text-decoration:line-through;color:var(--t3)}
+.tm{font-size:10px;color:var(--t3);margin-top:2px}
+
+/* DONUT CHART */
+.donut-wrap{position:relative;display:flex;align-items:center;justify-content:center}
+.donut-center{position:absolute;text-align:center;pointer-events:none}
+.donut-val{font-size:24px;font-weight:800;letter-spacing:-.04em}
+.donut-sub{font-size:10px;color:var(--t3);margin-top:2px;text-transform:uppercase;letter-spacing:.06em}
+
+/* GRADIENT TEXT */
+.gr-r{background:linear-gradient(135deg,var(--r),#ff8080);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.gr-c{background:linear-gradient(135deg,var(--cyan),#80e8ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.gr-g{background:linear-gradient(135deg,var(--green),#80ffbb);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.gr-p{background:linear-gradient(135deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.gr-a{background:linear-gradient(135deg,var(--amber),#ffdd80);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+
+.cal-day{background:var(--bg3);border:1px solid var(--b);border-radius:10px;min-height:90px;padding:8px;cursor:pointer;transition:all .2s;position:relative}
+.cal-day:hover{border-color:var(--b2);background:var(--bg4)}
+.cal-day.today{border-color:rgba(232,53,58,0.4);background:rgba(232,53,58,0.05)}
+.cal-day.other-month{opacity:.35}
+.cal-day-num{font-size:12px;font-weight:700;color:var(--t2);margin-bottom:5px}
+.cal-day.today .cal-day-num{color:var(--r)}
+.cal-pip{height:5px;border-radius:3px;margin-bottom:3px;font-size:9px;font-weight:600;color:#fff;padding:0 5px;display:flex;align-items:center;gap:3px;overflow:hidden;white-space:nowrap}
+.active-filter{background:var(--rg)!important;color:var(--r)!important;border-color:var(--r)!important}
+
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:9999px}
+::-webkit-scrollbar-thumb:hover{background:rgba(232,53,58,0.4)}
+
+.sp{display:inline-block;width:13px;height:13px;border:2px solid rgba(232,53,58,0.2);border-top-color:var(--r);border-radius:50%;animation:spin .5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div id="login-screen" style="position:fixed;inset:0;background:#0d0f14;display:flex;align-items:center;justify-content:center;z-index:9999;flex-direction:column">
+  <div style="position:absolute;inset:0;background:radial-gradient(ellipse 60% 40% at 50% 30%,rgba(232,53,58,0.1) 0%,transparent 70%);pointer-events:none"></div>
+  <div style="background:rgba(20,23,32,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:40px;width:360px;max-width:94vw;position:relative;text-align:center">
+    <div style="width:56px;height:56px;background:linear-gradient(135deg,#E8353A,#ff2d32);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;margin:0 auto 20px;box-shadow:0 8px 24px rgba(232,53,58,0.4)">E</div>
+    <div style="font-size:20px;font-weight:800;letter-spacing:-.03em;color:#fff;margin-bottom:6px">Elite Command Centre</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:28px">Enter your password to continue</div>
+    <input type="password" id="login-pw" placeholder="Password" onkeydown="if(event.key==='Enter')checkLogin()"
+      style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 16px;font-size:14px;color:#fff;font-family:Inter,sans-serif;outline:none;margin-bottom:12px;text-align:center;letter-spacing:.1em"/>
+    <div id="login-err" style="font-size:12px;color:#E8353A;margin-bottom:10px;min-height:18px"></div>
+    <button onclick="checkLogin()" style="width:100%;background:linear-gradient(135deg,#E8353A,#ff2d32);color:#fff;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;font-family:Inter,sans-serif;box-shadow:0 4px 16px rgba(232,53,58,0.35)">Sign In</button>
+    <div style="margin-top:20px;font-size:11px;color:rgba(255,255,255,0.25)">Elite Group LCA · Private Access Only</div>
+  </div>
+</div>
+
+<script>
+// Password check — runs before anything else
+const PW = 'EliteGroup2025!';
+const SESSION_KEY = 'elite_auth';
+
+function checkLogin(){
+  const input = document.getElementById('login-pw').value;
+  if(input === PW){
+    sessionStorage.setItem(SESSION_KEY, 'true');
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'grid';
+    rHome(); initAnalyticsCharts();
+  } else {
+    const err = document.getElementById('login-err');
+    err.textContent = 'Incorrect password. Please try again.';
+    document.getElementById('login-pw').value = '';
+    document.getElementById('login-pw').focus();
+    setTimeout(()=>err.textContent='', 3000);
+  }
+}
+
+// Check if already authenticated this session
+if(sessionStorage.getItem(SESSION_KEY) === 'true'){
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'grid';
+} else {
+  document.getElementById('app').style.display = 'none';
+  setTimeout(()=>document.getElementById('login-pw').focus(), 100);
+}
+</script>
+
+<div class="app" id="app">
+
+<!-- SIDEBAR -->
+<nav class="sidebar">
+  <div class="sb-logo">
+    <div class="sb-e">E</div>
+    <div><div class="sb-brand">Elite Group LCA</div><div class="sb-sub">Command Centre</div></div>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Overview</div>
+    <div class="ni active" onclick="go('home',this)"><div class="ni-ic">⬡</div> Dashboard</div>
+    <div class="sb-sec" style="margin-top:8px">Business</div>
+    <div class="ni" onclick="go('analytics',this)"><div class="ni-ic">📊</div> Analytics</div>
+    <div class="ni" onclick="go('quotes',this)"><div class="ni-ic">📋</div> Quotes</div>
+    <div class="ni" onclick="go('pipeline',this)"><div class="ni-ic">🔀</div> Pipeline</div>
+    <div class="ni" onclick="go('tasks',this)"><div class="ni-ic">✅</div> Tasks</div>
+    <div class="sb-sec" style="margin-top:8px">Finance</div>
+    <div class="ni" onclick="go('investments',this)"><div class="ni-ic">📈</div> Investments</div>
+    <div class="sb-sec" style="margin-top:8px">Marketing</div>
+    <div class="ni" onclick="go('social',this)"><div class="ni-ic">📣</div> Social Media</div>
+    <div class="ni" onclick="go('calendar',this)"><div class="ni-ic">📅</div> Content Calendar</div>
+    <div class="ni" onclick="go('tenders',this)"><div class="ni-ic">🔍</div> Tender Watch</div>
+    <div class="sb-sec" style="margin-top:8px">AI</div>
+    <div class="ni" onclick="go('ai',this)"><div class="ni-ic">🤖</div> AI Assistant</div>
+  </div>
+  <div class="sb-foot">
+    <div class="sb-av">LW</div>
+    <div><div class="sb-fn">Liam Walsh</div><div class="sb-fr">Director</div></div>
+    <div class="live-dot"></div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="tb-title" id="tb-title">Dashboard</div>
+    <div class="tb-right">
+      <div class="tb-badge">LIVE</div>
+      <div class="tb-clock" id="tb-clk"></div>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- HOME DASHBOARD -->
+    <div class="screen active" id="s-home">
+      <div class="ph"><h1>Good morning, Liam 👋</h1><p>Here's your Elite Group overview for today</p></div>
+
+      <!-- Top stat tiles -->
+      <div class="g4 mb20">
+        <div class="tile card-glow-r">
+          <div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div>
+          <div class="tile-icon" style="background:var(--rg)">💰</div>
+          <div class="tile-n gr-r" id="h-quotes-val">£0</div>
+          <div class="tile-label">Pipeline Value</div>
+          <div class="tile-change" style="color:var(--t3)" id="h-quotes-sub">0 active quotes</div>
+        </div>
+        <div class="tile card-glow-g">
+          <div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div>
+          <div class="tile-icon" style="background:var(--green2)">🏆</div>
+          <div class="tile-n gr-g" id="h-won">0</div>
+          <div class="tile-label">Quotes Won</div>
+          <div class="tile-change" style="color:var(--t3)" id="h-leads-sub">0 leads tracked</div>
+        </div>
+        <div class="tile card-glow-c">
+          <div class="tile-accent" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div>
+          <div class="tile-icon" style="background:var(--cyan2)">👥</div>
+          <div class="tile-n gr-c" id="h-followers">—</div>
+          <div class="tile-label">Social Followers</div>
+          <div class="tile-change" style="color:var(--t3)">Across all platforms</div>
+        </div>
+        <div class="tile card-glow-p">
+          <div class="tile-accent" style="background:linear-gradient(90deg,var(--purple),transparent)"></div>
+          <div class="tile-icon" style="background:var(--purple2)">📈</div>
+          <div class="tile-n gr-p">£<span id="h-inv">50.00</span></div>
+          <div class="tile-label">Investment Value</div>
+          <div class="tile-change pos" id="h-inv-pct">5% of £1k goal</div>
+        </div>
+      </div>
+
+      <div class="g2 mb20">
+        <!-- Quote Pipeline Chart -->
+        <div class="card card-glow-r">
+          <div class="row" style="margin-bottom:16px">
+            <div class="ct" style="margin:0">Quote Pipeline</div>
+            <span class="bx bx-r" id="h-pipeline-badge">Loading...</span>
+          </div>
+          <div class="chart-wrap" style="height:200px">
+            <canvas id="pipelineChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Investment Progress -->
+        <div class="card card-glow-p">
+          <div class="ct">Investment Journey · £50 → £1,000</div>
+          <div class="donut-wrap" style="height:200px">
+            <canvas id="invDonut" width="200" height="200" style="max-width:200px"></canvas>
+            <div class="donut-center">
+              <div class="donut-val gr-p">£<span id="inv-donut-val">50</span></div>
+              <div class="donut-sub">of £1,000</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent activity -->
+      <div class="g2">
+        <div class="card">
+          <div class="ct">Recent Quotes</div>
+          <div id="h-recent-quotes"><div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No quotes yet</div></div>
+        </div>
+        <div class="card">
+          <div class="ct">Tasks Due Today</div>
+          <div id="h-tasks-today"><div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No tasks due</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ANALYTICS -->
+    <div class="screen" id="s-analytics">
+      <div class="ph"><div class="row"><h1>Analytics</h1></div><p>elitegrouplca.com · website performance</p></div>
+      <div class="g4 mb20">
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div><div class="tile-n gr-r" id="an-v">—</div><div class="tile-label">Visitors · 7d</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div><div class="tile-n gr-c" id="an-p">—</div><div class="tile-label">Page Views</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--purple),transparent)"></div><div class="tile-n gr-p" id="an-s">—</div><div class="tile-label">Sessions</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div><div class="tile-n gr-g" id="an-b">—</div><div class="tile-label">Avg Session</div></div>
+      </div>
+      <div class="g2 mb20">
+        <div class="card card-glow-c">
+          <div class="ct">Weekly Visitors Trend</div>
+          <div class="chart-wrap" style="height:180px"><canvas id="visitorsChart"></canvas></div>
+        </div>
+        <div class="card card-glow-p">
+          <div class="ct">Traffic Sources</div>
+          <div class="chart-wrap" style="height:180px">
+            <canvas id="trafficDonut"></canvas>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="ct">Update Stats from Google Analytics</div>
+        <div class="fr">
+          <div class="fg"><label class="fl">Visitors (7d)</label><input class="fi" type="number" id="iv" placeholder="142"/></div>
+          <div class="fg"><label class="fl">Page Views</label><input class="fi" type="number" id="ip" placeholder="380"/></div>
+          <div class="fg"><label class="fl">Sessions</label><input class="fi" type="number" id="is" placeholder="165"/></div>
+          <div class="fg"><label class="fl">Avg Session</label><input class="fi" type="text" id="ib" placeholder="2m 14s"/></div>
+        </div>
+        <div class="row"><button class="btn btn-p" onclick="svA()">Save Stats</button><a href="https://analytics.google.com" target="_blank" style="font-size:12px;color:var(--cyan);text-decoration:none">View in Google Analytics →</a></div>
+      </div>
+    </div>
+
+    <!-- QUOTES -->
+    <div class="screen" id="s-quotes">
+      <div class="ph"><div class="row"><h1>Quotes</h1><button class="btn btn-p" onclick="om('qm')">+ New Quote</button></div><p>All client proposals — track status and value</p></div>
+      <div class="g4 mb20">
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div><div class="tile-n gr-r" id="qt">0</div><div class="tile-label">Total Quotes</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--amber),transparent)"></div><div class="tile-n gr-a" id="qp">0</div><div class="tile-label">Pending</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div><div class="tile-n gr-g" id="qw">0</div><div class="tile-label">Won</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div><div class="tile-n gr-c" id="qv">£0</div><div class="tile-label">Pipeline Value</div></div>
+      </div>
+      <div class="g2 mb20">
+        <div class="card card-glow-g">
+          <div class="ct">Quote Status Breakdown</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="quoteStatusChart"></canvas></div>
+        </div>
+        <div class="card card-glow-c">
+          <div class="ct">Value by Status</div>
+          <div class="chart-wrap" style="height:200px"><canvas id="quoteValueChart"></canvas></div>
+        </div>
+      </div>
+      <div class="card"><table class="tbl"><thead><tr><th>Client</th><th>Contact</th><th>Value</th><th>Date</th><th>Status</th><th></th></tr></thead><tbody id="qtb"><tr><td colspan="6" style="text-align:center;color:var(--t3);padding:48px;font-size:13px">No quotes yet — click New Quote to start</td></tr></tbody></table></div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div class="screen" id="s-pipeline">
+      <div class="ph"><div class="row"><h1>Pipeline</h1><button class="btn btn-p" onclick="om('lm')">+ Add Lead</button></div><p>Lead management — track through stages</p></div>
+      <div class="g4 mb20">
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--blue),transparent)"></div><div class="tile-n" style="color:var(--blue)" id="pl-new">0</div><div class="tile-label">New</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--amber),transparent)"></div><div class="tile-n gr-a" id="pl-cont">0</div><div class="tile-label">Contacted</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div><div class="tile-n gr-r" id="pl-quot">0</div><div class="tile-label">Quoted</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div><div class="tile-n gr-g" id="pl-clos">0</div><div class="tile-label">Closed</div></div>
+      </div>
+      <div class="kb" id="kb-board">
+        <div class="kc"><div class="kct" style="color:var(--blue)"><span>New</span><span class="bx bx-b" id="cn">0</span></div><div id="cl-new"></div></div>
+        <div class="kc"><div class="kct" style="color:var(--amber)"><span>Contacted</span><span class="bx bx-y" id="cc">0</span></div><div id="cl-contacted"></div></div>
+        <div class="kc"><div class="kct" style="color:var(--r)"><span>Quoted</span><span class="bx bx-r" id="cq">0</span></div><div id="cl-quoted"></div></div>
+        <div class="kc"><div class="kct" style="color:var(--green)"><span>Closed Won</span><span class="bx bx-g" id="ck">0</span></div><div id="cl-closed"></div></div>
+      </div>
+    </div>
+
+    <!-- TASKS -->
+    <div class="screen" id="s-tasks">
+      <div class="ph"><div class="row"><h1>Tasks</h1><button class="btn btn-p" onclick="om('tm')">+ Add Task</button></div><p>Daily task management</p></div>
+      <div class="g2 mt20">
+        <div class="card card-glow-r"><div class="ct">To Do <span style="color:var(--r)" id="tdc"></span></div><div id="td"></div></div>
+        <div class="card card-glow-g"><div class="ct">Completed</div><div id="tc2"></div></div>
+      </div>
+    </div>
+
+    <!-- INVESTMENTS -->
+    <div class="screen" id="s-investments">
+      <div class="ph"><h1>Investments</h1><p>£50 → £1,000 tracker · live market data · AI advisor</p></div>
+      <div class="g4 mb20">
+        <div class="tile card-glow-r"><div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div><div class="tile-n gr-r">£<span id="ic">50.00</span></div><div class="tile-label">Current Value</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div><div class="tile-n gr-g" id="ipct">5.0%</div><div class="tile-label">Goal Progress</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--amber),transparent)"></div><div class="tile-n gr-a">£<span id="ir-tile">950</span></div><div class="tile-label">Remaining to Goal</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div><div class="tile-n gr-c" id="pos-count">0</div><div class="tile-label">Positions Held</div></div>
+      </div>
+
+      <div class="card card-glow-p mb20">
+        <div class="row" style="margin-bottom:10px"><div class="ct" style="margin:0">Goal Progress · £50 → £1,000</div><div style="font-size:12px;color:var(--t3)" id="ir">£950.00 remaining</div></div>
+        <div class="pb"><div class="pf" id="ip2" style="width:5%"></div></div>
+      </div>
+
+      <div class="g2 mb20">
+        <div class="card card-glow-c">
+          <div class="row mb20"><div class="ct" style="margin:0">Live Prices</div><button class="btn btn-s btn-xs" onclick="fp()">↻ Refresh</button></div>
+          <div id="lp"><div style="color:var(--t3);font-size:13px">Click refresh to load</div></div>
+          <div style="height:1px;background:var(--b);margin:14px 0"></div>
+          <div style="display:flex;gap:8px"><input class="fi" id="ws" placeholder="Add symbol (AAPL, BTC...)" style="flex:1"/><button class="btn btn-p btn-xs" onclick="aw()">Add</button></div>
+        </div>
+        <div class="card card-glow-g">
+          <div class="row mb20"><div class="ct" style="margin:0">Portfolio</div><button class="btn btn-p btn-xs" onclick="om('im')">+ Position</button></div>
+          <div id="pl2"><div style="color:var(--t3);font-size:13px">No positions yet</div></div>
+        </div>
+      </div>
+
+      <div class="card card-glow-r">
+        <div class="ct">🤖 AI Investment Advisor</div>
+        <p style="font-size:12px;color:var(--t3);margin-bottom:14px">Analyses market trends and world events · not regulated financial advice</p>
+        <div class="cw" style="border:1px solid var(--b);border-radius:18px;overflow:hidden">
+          <div class="cm" id="icm" style="height:280px"><div class="msg a">Hello Liam. I can help analyse market conditions and plan your £50 → £1,000 journey. What would you like to explore?</div></div>
+          <div class="ci"><input id="ii" placeholder="e.g. What's a smart move with £50 right now?" onkeydown="if(event.key==='Enter')si()"/><button class="cs" onclick="si()">→</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL MEDIA -->
+    <div class="screen" id="s-social">
+      <div class="ph"><div class="row"><h1>Social Media</h1><button class="btn btn-p" onclick="genDaily()">✨ Generate Posts</button></div><p>AI-powered content creation · performance tracking</p></div>
+      <div class="g4 mb20">
+        <div class="tile card-glow-c"><div class="tile-accent" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div><div class="tile-n gr-c" id="sm-reach">—</div><div class="tile-label">Total Reach</div></div>
+        <div class="tile card-glow-g"><div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div><div class="tile-n gr-g" id="sm-engage">—</div><div class="tile-label">Engagements</div></div>
+        <div class="tile card-glow-r"><div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div><div class="tile-n gr-r" id="sm-followers">—</div><div class="tile-label">Followers</div></div>
+        <div class="tile"><div class="tile-accent" style="background:linear-gradient(90deg,var(--purple),transparent)"></div><div class="tile-n gr-p" id="sm-posts">0</div><div class="tile-label">Posts Saved</div></div>
+      </div>
+      <div class="g2 mb20">
+        <div class="card card-glow-c">
+          <div class="ct">Platform Stats</div>
+          <div class="ri"><div style="width:30px;height:30px;border-radius:8px;background:#0077b5;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0">in</div><div style="flex:1;margin-left:6px"><div style="font-size:13px;font-weight:600">LinkedIn</div><div style="font-size:11px;color:var(--t3)">Followers: <input id="li-fol" type="number" placeholder="0" style="width:55px;border:none;background:transparent;font-size:11px;color:var(--cyan);font-weight:700;outline:none" onchange="svSM()"/> · Reach: <input id="li-reach" type="number" placeholder="0" style="width:55px;border:none;background:transparent;font-size:11px;color:var(--green);font-weight:700;outline:none" onchange="svSM()"/></div></div></div>
+          <div class="ri"><div style="width:30px;height:30px;border-radius:8px;background:#1877f2;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;flex-shrink:0">f</div><div style="flex:1;margin-left:6px"><div style="font-size:13px;font-weight:600">Facebook</div><div style="font-size:11px;color:var(--t3)">Followers: <input id="fb-fol" type="number" placeholder="0" style="width:55px;border:none;background:transparent;font-size:11px;color:var(--cyan);font-weight:700;outline:none" onchange="svSM()"/> · Reach: <input id="fb-reach" type="number" placeholder="0" style="width:55px;border:none;background:transparent;font-size:11px;color:var(--green);font-weight:700;outline:none" onchange="svSM()"/></div></div></div>
+          <div class="ri"><div style="width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#f09433,#dc2743,#bc1888);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;flex-shrink:0">📷</div><div style="flex:1;margin-left:6px"><div style="font-size:13px;font-weight:600">Instagram</div><div style="font-size:11px;color:var(--t3)">Followers: <input id="ig-fol" type="number" placeholder="0" style="width:55px;border:none;background:transparent;font-size:11px;color:var(--cyan);font-weight:700;outline:none" onchange="svSM()"/> · Reach: <input id="ig-reach" type="number" placeholder="0" style="width:55px;border:none;background:transparent;font-size:11px;color:var(--green);font-weight:700;outline:none" onchange="svSM()"/></div></div></div>
+        </div>
+        <div class="card card-glow-r">
+          <div class="ct">AI Ad Creator</div>
+          <div class="fg"><label class="fl">Platform</label><select class="fs" id="ad-platform"><option>LinkedIn</option><option>Facebook</option><option>Instagram</option></select></div>
+          <div class="fg"><label class="fl">Ad Type</label><select class="fs" id="ad-type"><option>Managed Print Services</option><option>PaperCut Software</option><option>Cost Saving / Tier Billing</option><option>Schools Specialist</option><option>Elite Service Excellence</option></select></div>
+          <div class="fg"><label class="fl">Tone</label><select class="fs" id="ad-tone"><option>Professional</option><option>Friendly & Approachable</option><option>Bold & Direct</option></select></div>
+          <button class="btn btn-p" onclick="genAd()" style="width:100%">✨ Generate Ad Copy</button>
+        </div>
+      </div>
+      <div class="card mb20">
+        <div class="row" style="margin-bottom:16px"><div class="ct" style="margin:0">Today's AI Posts</div><div style="display:flex;gap:8px"><select class="fs" id="post-theme" style="width:auto;font-size:12px;padding:5px 12px"><option value="general">General</option><option value="papercut">PaperCut</option><option value="schools">Schools</option><option value="savings">Savings</option><option value="service">Service</option></select><button class="btn btn-s btn-xs" onclick="genDaily()">↻ Regenerate</button></div></div>
+        <div id="daily-posts"><div style="color:var(--t3);font-size:13px;text-align:center;padding:40px">Click Generate Posts to create AI content for all platforms</div></div>
+      </div>
+      <div id="ad-output-wrap" style="display:none;margin-bottom:20px"><div class="card card-glow-r"><div class="row" style="margin-bottom:12px"><div class="ct" style="margin:0">Generated Ad Copy</div><button class="btn btn-s btn-xs" onclick="saveAdPost()">Save</button></div><div id="ad-output" style="font-size:13px;color:var(--t2);line-height:1.7;white-space:pre-wrap"></div></div></div>
+      <div class="card">
+        <div class="row" style="margin-bottom:14px"><div class="ct" style="margin:0">Saved Posts</div><div style="font-size:11px;color:var(--t3)" id="post-count">0 saved</div></div>
+        <div id="saved-posts"><div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No posts saved yet</div></div>
+      </div>
+    </div>
+
+    <!-- TENDER WATCH -->
+    <div class="screen" id="s-tenders">
+      <div class="ph"><div class="row"><h1>Tender Watch</h1><button class="btn btn-p" onclick="fetchTenders()">↻ Refresh Feed</button></div><p>AI-monitored copier & print contract renewals · North West England</p></div>
+      <div class="g4 mb20">
+        <div class="tile card-glow-r"><div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div><div class="tile-n gr-r" id="t-total">0</div><div class="tile-label">Opportunities</div></div>
+        <div class="tile card-glow-g"><div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div><div class="tile-n gr-g" id="t-new">0</div><div class="tile-label">Hot Leads</div></div>
+        <div class="tile card-glow-c"><div class="tile-accent" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div><div class="tile-n gr-c" id="t-tracked">0</div><div class="tile-label">Tracked</div></div>
+        <div class="tile card-glow-p"><div class="tile-accent" style="background:linear-gradient(90deg,var(--purple),transparent)"></div><div class="tile-n gr-p" id="t-won">0</div><div class="tile-label">Contracts Won</div></div>
+      </div>
+      <div class="g2 mb20">
+        <div class="card card-glow-c">
+          <div class="ct">Search Filters</div>
+          <div class="fg"><label class="fl">Region</label><select class="fs" id="t-region"><option value="all">All North West</option><option value="merseyside">Merseyside</option><option value="manchester">Greater Manchester</option><option value="lancashire">Lancashire</option><option value="cheshire">Cheshire</option><option value="wirral">Wirral</option></select></div>
+          <div class="fg"><label class="fl">Sector</label><select class="fs" id="t-sector"><option value="all">All Sectors</option><option value="education">Education</option><option value="council">Local Authority</option><option value="nhs">NHS / Healthcare</option><option value="housing">Housing Association</option></select></div>
+          <div class="fg"><label class="fl">Value</label><select class="fs" id="t-value"><option value="all">Any Value</option><option value="small">Under £10k</option><option value="mid">£10k–£50k</option><option value="large">£50k+</option></select></div>
+          <button class="btn btn-p" onclick="fetchTenders()" style="width:100%">Search Opportunities</button>
+        </div>
+        <div class="card card-glow-r" style="display:flex;flex-direction:column">
+          <div class="ct">🤖 Opportunity Analyst</div>
+          <div class="cw" style="border:1px solid var(--b);border-radius:14px;overflow:hidden;flex:1">
+            <div class="cm" id="tender-chat" style="height:260px"><div class="msg a">Hi Liam! I can help identify the best print contract opportunities in the North West. What would you like to know?</div></div>
+            <div class="ci"><input id="tender-input" placeholder="e.g. Which schools in Wirral are likely due renewal?" onkeydown="if(event.key==='Enter')sendTenderChat()"/><button class="cs" onclick="sendTenderChat()">→</button></div>
+          </div>
+        </div>
+      </div>
+      <div class="card mb20">
+        <div class="row" style="margin-bottom:16px"><div class="ct" style="margin:0">Live Opportunities Feed</div><div style="font-size:11px;color:var(--t3)" id="tender-updated"></div></div>
+        <div id="tender-feed"><div style="color:var(--t3);font-size:13px;text-align:center;padding:48px"><div style="font-size:32px;margin-bottom:12px">🔍</div>Click Refresh Feed to load today's opportunities</div></div>
+      </div>
+      <div class="g2">
+        <div class="card card-glow-c"><div class="row" style="margin-bottom:14px"><div class="ct" style="margin:0">Tracked Opportunities</div></div><div id="tracked-list"><div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">None tracked yet</div></div></div>
+        <div class="card card-glow-g"><div class="row" style="margin-bottom:14px"><div class="ct" style="margin:0">Won Contracts</div><button class="btn btn-p btn-xs" onclick="om('won-modal')">+ Add Win</button></div><div id="won-list"><div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No wins yet — go get them!</div></div></div>
+      </div>
+    </div>
+
+
+    <!-- CONTENT CALENDAR -->
+    <div class="screen" id="s-calendar">
+      <div class="ph">
+        <div class="row">
+          <h1>Content Calendar</h1>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-s btn-xs" onclick="calNav(-1)">← Prev</button>
+            <span id="cal-month-label" style="font-size:14px;font-weight:700;min-width:140px;text-align:center"></span>
+            <button class="btn btn-s btn-xs" onclick="calNav(1)">Next →</button>
+            <button class="btn btn-p" onclick="om('cal-modal')">+ Schedule Post</button>
+          </div>
+        </div>
+        <p>Plan and track your social media content · click any day to add a post</p>
+      </div>
+
+      <!-- Stats row -->
+      <div class="g4 mb20">
+        <div class="tile card-glow-c"><div class="tile-accent" style="background:linear-gradient(90deg,var(--cyan),transparent)"></div><div class="tile-n gr-c" id="cal-total">0</div><div class="tile-label">Posts This Month</div></div>
+        <div class="tile card-glow-g"><div class="tile-accent" style="background:linear-gradient(90deg,var(--green),transparent)"></div><div class="tile-n gr-g" id="cal-posted">0</div><div class="tile-label">Posted</div></div>
+        <div class="tile card-glow-r"><div class="tile-accent" style="background:linear-gradient(90deg,var(--r),transparent)"></div><div class="tile-n gr-r" id="cal-scheduled">0</div><div class="tile-label">Scheduled</div></div>
+        <div class="tile card-glow-p"><div class="tile-accent" style="background:linear-gradient(90deg,var(--purple),transparent)"></div><div class="tile-n gr-p" id="cal-platforms">0</div><div class="tile-label">Platforms Active</div></div>
+      </div>
+
+
+      <!-- Performance Summary (shown when data exists) -->
+      <div id="cal-perf-summary" style="display:none;margin-bottom:16px">
+        <div class="card card-glow-c">
+          <div class="row" style="margin-bottom:14px">
+            <div class="ct" style="margin:0">📊 Performance Summary — Posted Content</div>
+            <span style="font-size:10px;color:var(--t3)">From posts with stats entered · <a href="#" onclick="go('social',document.querySelector('[onclick*=social]'));return false" style="color:var(--cyan);text-decoration:none">view social screen →</a></span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px">
+            <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:12px;border:1px solid var(--b)">
+              <div style="font-size:24px;font-weight:800;color:var(--r)" id="cal-ps-likes">0</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Total Likes</div>
+            </div>
+            <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:12px;border:1px solid var(--b)">
+              <div style="font-size:24px;font-weight:800;color:var(--cyan)" id="cal-ps-comments">0</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Comments</div>
+            </div>
+            <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:12px;border:1px solid var(--b)">
+              <div style="font-size:24px;font-weight:800;color:var(--purple)" id="cal-ps-reach">0</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Total Reach</div>
+            </div>
+            <div style="text-align:center;padding:16px;background:var(--bg3);border-radius:12px;border:1px solid var(--b)">
+              <div style="font-size:24px;font-weight:800;color:var(--green)" id="cal-ps-clicks">0</div>
+              <div style="font-size:10px;color:var(--t3);margin-top:4px;text-transform:uppercase;letter-spacing:.06em">Link Clicks</div>
+            </div>
+          </div>
+          <div style="margin-top:12px;padding:10px 14px;background:rgba(0,212,255,0.05);border-radius:10px;border:1px solid rgba(0,212,255,0.12);display:flex;align-items:center;gap:8px">
+            <span style="font-size:20px">💡</span>
+            <span style="font-size:12px;color:var(--t2)">To get live stats automatically, connect Meta Business Suite API. <span style="color:var(--cyan)">Ready to integrate when you are.</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Platform filter -->
+      <div style="display:flex;gap:8px;margin-bottom:16px;align-items:center">
+        <span style="font-size:11px;color:var(--t3);font-weight:600;text-transform:uppercase;letter-spacing:.08em">Filter:</span>
+        <button class="btn btn-s btn-xs cal-filter active-filter" onclick="setCalFilter('all',this)">All</button>
+        <button class="btn btn-s btn-xs cal-filter" onclick="setCalFilter('LinkedIn',this)" style="border-color:#0077b5;color:#0077b5">LinkedIn</button>
+        <button class="btn btn-s btn-xs cal-filter" onclick="setCalFilter('Facebook',this)" style="border-color:#1877f2;color:#1877f2">Facebook</button>
+        <button class="btn btn-s btn-xs cal-filter" onclick="setCalFilter('Instagram',this)" style="border-color:#e1306c;color:#e1306c">Instagram</button>
+      </div>
+
+      <!-- Calendar grid -->
+      <div class="card mb20" style="padding:16px">
+        <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px">
+          <div style="text-align:center;font-size:10px;font-weight:700;color:var(--t3);padding:8px;text-transform:uppercase;letter-spacing:.08em">Mon</div>
+          <div style="text-align:center;font-size:10px;font-weight:700;color:var(--t3);padding:8px;text-transform:uppercase;letter-spacing:.08em">Tue</div>
+          <div style="text-align:center;font-size:10px;font-weight:700;color:var(--t3);padding:8px;text-transform:uppercase;letter-spacing:.08em">Wed</div>
+          <div style="text-align:center;font-size:10px;font-weight:700;color:var(--t3);padding:8px;text-transform:uppercase;letter-spacing:.08em">Thu</div>
+          <div style="text-align:center;font-size:10px;font-weight:700;color:var(--t3);padding:8px;text-transform:uppercase;letter-spacing:.08em">Fri</div>
+          <div style="text-align:center;font-size:10px;font-weight:700;color:var(--t3);padding:8px;text-transform:uppercase;letter-spacing:.08em">Sat</div>
+          <div style="text-align:center;font-size:10px;font-weight:700;color:var(--t3);padding:8px;text-transform:uppercase;letter-spacing:.08em">Sun</div>
+        </div>
+        <div id="cal-grid" style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px"></div>
+      </div>
+
+      <!-- Upcoming posts list -->
+      <div class="g2">
+        <div class="card card-glow-c">
+          <div class="ct">Upcoming Posts</div>
+          <div id="cal-upcoming"><div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No upcoming posts</div></div>
+        </div>
+        <div class="card card-glow-g">
+          <div class="ct">Recently Posted</div>
+          <div id="cal-posted-list"><div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No posts marked as done yet</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI ASSISTANT -->
+    <div class="screen" id="s-ai">
+      <div class="ph"><h1>AI Assistant</h1><p>Your Elite Group business intelligence · powered by Claude</p></div>
+      <div class="card card-glow-r">
+        <div class="cw" style="border:1px solid var(--b);border-radius:18px;overflow:hidden">
+          <div class="cm" id="acm" style="height:460px"><div class="msg a">Hi Liam! I'm your Elite Group AI assistant. I know your products, customers and business inside out. I can draft emails, help close deals, handle objections or support any task. What do you need?</div></div>
+          <div class="ci"><input id="ai2" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sa()"/><button class="cs" onclick="sa()">Send</button></div>
+        </div>
+      </div>
+      <div class="mt20">
+        <div class="ct" style="margin-bottom:12px">Quick Prompts</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button class="btn btn-s" onclick="qp('Draft a professional follow-up email for a managed print quote I sent to a school last week')">📧 Follow-up email</button>
+          <button class="btn btn-s" onclick="qp('Give me the best objection handling techniques for managed print sales')">💬 Objection handling</button>
+          <button class="btn btn-s" onclick="qp('Explain PaperCut tier billing simply for a school bursar')">📄 Explain tier billing</button>
+          <button class="btn btn-s" onclick="qp('What are the best discovery questions to ask a new print prospect?')">🔍 Discovery questions</button>
+          <button class="btn btn-s" onclick="qp('Write a LinkedIn post about Elite Group managed print services')">📱 LinkedIn post</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- MODALS -->
+<div class="mo" id="qm"><div class="md">
+  <div class="mh"><h2>New Quote</h2><div class="mc" onclick="cm2('qm')">✕</div></div>
+  <div class="fr"><div class="fg"><label class="fl">Client / School</label><input class="fi" id="qc" placeholder="e.g. Riverside Primary"/></div><div class="fg"><label class="fl">Contact Name</label><input class="fi" id="qn" placeholder="e.g. Teresa Devon"/></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Quote Value (£)</label><input class="fi" type="number" id="qv2" placeholder="0.00"/></div><div class="fg"><label class="fl">Date Sent</label><input class="fi" type="date" id="qd"/></div></div>
+  <div class="fg"><label class="fl">Products / Services</label><input class="fi" id="qpr" placeholder="e.g. 2x Kyocera A3, PaperCut"/></div>
+  <div class="fg"><label class="fl">Status</label><select class="fs" id="qst"><option>Sent</option><option>Follow-up</option><option>Won</option><option>Lost</option></select></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="qno" placeholder="Any notes..."/></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn btn-s" onclick="cm2('qm')">Cancel</button><button class="btn btn-p" onclick="svQ()">Save Quote</button></div>
+</div></div>
+
+<div class="mo" id="lm"><div class="md">
+  <div class="mh"><h2>Add Lead</h2><div class="mc" onclick="cm2('lm')">✕</div></div>
+  <div class="fr"><div class="fg"><label class="fl">Organisation</label><input class="fi" id="lo" placeholder="e.g. St John's Primary"/></div><div class="fg"><label class="fl">Contact</label><input class="fi" id="lc" placeholder="Name & role"/></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Phone</label><input class="fi" id="lp2" placeholder="07xxx xxxxxx"/></div><div class="fg"><label class="fl">Email</label><input class="fi" id="le" placeholder="email@org.com"/></div></div>
+  <div class="fg"><label class="fl">Stage</label><select class="fs" id="ls"><option value="new">New</option><option value="contacted">Contacted</option><option value="quoted">Quoted</option><option value="closed">Closed Won</option></select></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="ln" placeholder="Source, requirements..."/></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn btn-s" onclick="cm2('lm')">Cancel</button><button class="btn btn-p" onclick="svL()">Save Lead</button></div>
+</div></div>
+
+<div class="mo" id="tm"><div class="md">
+  <div class="mh"><h2>Add Task</h2><div class="mc" onclick="cm2('tm')">✕</div></div>
+  <div class="fg"><label class="fl">Task</label><input class="fi" id="tt2" placeholder="What needs doing?"/></div>
+  <div class="fr"><div class="fg"><label class="fl">Due Date</label><input class="fi" type="date" id="td2"/></div><div class="fg"><label class="fl">Priority</label><select class="fs" id="tp"><option>High</option><option>Medium</option><option>Low</option></select></div></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn btn-s" onclick="cm2('tm')">Cancel</button><button class="btn btn-p" onclick="svT()">Save Task</button></div>
+</div></div>
+
+<div class="mo" id="im"><div class="md">
+  <div class="mh"><h2>Add Position</h2><div class="mc" onclick="cm2('im')">✕</div></div>
+  <div class="fr"><div class="fg"><label class="fl">Symbol</label><input class="fi" id="ps" placeholder="AAPL"/></div><div class="fg"><label class="fl">Name</label><input class="fi" id="pn" placeholder="Apple Inc."/></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Invested (£)</label><input class="fi" type="number" id="pa" placeholder="50.00"/></div><div class="fg"><label class="fl">Buy Price ($)</label><input class="fi" type="number" id="pb2" placeholder="0.00"/></div></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn btn-s" onclick="cm2('im')">Cancel</button><button class="btn btn-p" onclick="svP()">Save Position</button></div>
+</div></div>
+
+
+<div class="mo" id="cal-modal"><div class="md">
+  <div class="mh"><h2>Schedule Post</h2><div class="mc" onclick="cm2('cal-modal')">✕</div></div>
+  <div class="fr">
+    <div class="fg"><label class="fl">Date</label><input class="fi" type="date" id="cal-date"/></div>
+    <div class="fg"><label class="fl">Platform</label>
+      <select class="fs" id="cal-platform">
+        <option>LinkedIn</option><option>Facebook</option><option>Instagram</option><option>All Platforms</option>
+      </select>
+    </div>
+  </div>
+  <div class="fg"><label class="fl">Post Type</label>
+    <select class="fs" id="cal-type">
+      <option>Organic Post</option><option>Paid Ad</option><option>Story</option><option>Video</option>
+    </select>
+  </div>
+  <div class="fg"><label class="fl">Content / Caption</label>
+    <textarea class="fi" id="cal-content" rows="5" placeholder="Paste your post content here, or generate with AI below..." style="resize:vertical;font-family:var(--f)"></textarea>
+  </div>
+  <div class="fg"><label class="fl">Load from Saved Posts</label>
+    <select class="fs" id="cal-saved-select" onchange="loadSavedPost()">
+      <option value="">— Select a saved post to load —</option>
+    </select>
+  </div>
+  <div class="fg"><label class="fl">AI Generate Content</label>
+    <div style="display:flex;gap:8px">
+      <input class="fi" id="cal-ai-prompt" placeholder="e.g. PaperCut promotion for schools" style="flex:1"/>
+      <button class="btn btn-p btn-xs" onclick="calGenPost()">✨ Generate</button>
+    </div>
+  </div>
+  <div class="fg"><label class="fl">Status</label>
+    <select class="fs" id="cal-status"><option value="scheduled">Scheduled</option><option value="posted">Already Posted</option></select>
+  </div>
+  <div class="fg"><label class="fl">Notes</label>
+    <input class="fi" id="cal-notes" placeholder="Audience targeting, budget, hashtag notes..."/>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+    <button class="btn btn-s" onclick="cm2('cal-modal')">Cancel</button>
+    <button class="btn btn-p" onclick="saveCalPost()">Save to Calendar</button>
+  </div>
+</div></div>
+
+
+<div class="mo" id="perf-modal"><div class="md" style="max-width:400px">
+  <div class="mh"><h2>📊 Post Performance</h2><div class="mc" onclick="cm2('perf-modal')">✕</div></div>
+  <input type="hidden" id="perf-post-id"/>
+  <p style="font-size:12px;color:var(--t3);margin-bottom:18px;line-height:1.6">Enter the stats from Meta Business Suite or LinkedIn Analytics. These will be stored and shown on your calendar.</p>
+  <div class="fr">
+    <div class="fg"><label class="fl">❤️ Likes / Reactions</label><input class="fi" type="number" id="perf-likes" placeholder="0" min="0"/></div>
+    <div class="fg"><label class="fl">💬 Comments</label><input class="fi" type="number" id="perf-comments" placeholder="0" min="0"/></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><label class="fl">👁️ Reach / Impressions</label><input class="fi" type="number" id="perf-reach" placeholder="0" min="0"/></div>
+    <div class="fg"><label class="fl">🖱️ Link Clicks</label><input class="fi" type="number" id="perf-clicks" placeholder="0" min="0"/></div>
+  </div>
+  <div id="perf-calc" style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:12px;padding:14px;margin-bottom:16px;display:none">
+    <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px">Calculated Metrics</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--cyan)" id="perf-eng-rate">0%</div><div style="font-size:10px;color:var(--t3);margin-top:2px">Engagement Rate</div></div>
+      <div style="text-align:center"><div style="font-size:20px;font-weight:800;color:var(--green)" id="perf-total-eng">0</div><div style="font-size:10px;color:var(--t3);margin-top:2px">Total Interactions</div></div>
+    </div>
+  </div>
+  <div style="display:flex;gap:8px;justify-content:flex-end">
+    <button class="btn btn-s" onclick="cm2('perf-modal')">Cancel</button>
+    <button class="btn btn-p" onclick="savePerfStats()">Save Stats</button>
+  </div>
+</div></div>
+
+<div class="mo" id="won-modal"><div class="md">
+  <div class="mh"><h2>Record a Win 🏆</h2><div class="mc" onclick="cm2('won-modal')">✕</div></div>
+  <div class="fr"><div class="fg"><label class="fl">Organisation</label><input class="fi" id="w-org" placeholder="e.g. Riverside Primary School"/></div><div class="fg"><label class="fl">Contact</label><input class="fi" id="w-contact" placeholder="Name & role"/></div></div>
+  <div class="fr"><div class="fg"><label class="fl">Contract Value (£/yr)</label><input class="fi" type="number" id="w-value" placeholder="0.00"/></div><div class="fg"><label class="fl">Date Won</label><input class="fi" type="date" id="w-date"/></div></div>
+  <div class="fg"><label class="fl">Sector</label><select class="fs" id="w-sector"><option>Education</option><option>Local Authority</option><option>NHS</option><option>Housing</option><option>Commercial</option></select></div>
+  <div class="fg"><label class="fl">Notes</label><input class="fi" id="w-notes" placeholder="Contract details..."/></div>
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px"><button class="btn btn-s" onclick="cm2('won-modal')">Cancel</button><button class="btn btn-p" onclick="svWin()">Record Win</button></div>
+</div></div>
+
+<script>
+const AK='SKTS7559MIJ0URQC', M='claude-sonnet-4-20250514';
+const TITLES={home:'Dashboard',analytics:'Analytics',quotes:'Quotes',pipeline:'Pipeline',tasks:'Tasks',investments:'Investments',social:'Social Media',tenders:'Tender Watch',calendar:'Content Calendar',ai:'AI Assistant'};
+
+// State
+let D={an:{v:'—',p:'—',s:'—',b:'—'},quotes:[],leads:[],tasks:[],wl:['AAPL','TSLA','BTC'],pf:[],bal:50,ah:[],ih:[],sm:{li:{fol:0,reach:0},fb:{fol:0,reach:0},ig:{fol:0,reach:0},posts:[]},tenders:{tracked:[],won:[],lastFetch:null,tenderHistory:[]}};
+try{const x=localStorage.getItem('elite_v5');if(x){const p=JSON.parse(x);D={...D,...p};if(p.sm)D.sm={...D.sm,...p.sm};if(p.tenders)D.tenders={...D.tenders,...p.tenders};}}catch(e){}
+const sv=()=>{try{localStorage.setItem('elite_v5',JSON.stringify(D));}catch(e){}};
+
+// Clock
+const tick=()=>{const d=new Date();document.getElementById('tb-clk').textContent=d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'})+' · '+d.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});};tick();setInterval(tick,1000);
+
+// Charts storage
+let charts={};
+function destroyChart(id){if(charts[id]){charts[id].destroy();delete charts[id];}}
+
+// Chart defaults
+Chart.defaults.color='rgba(255,255,255,0.4)';
+Chart.defaults.borderColor='rgba(255,255,255,0.06)';
+Chart.defaults.font.family='Inter';
+
+// Nav
+function go(id,el){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('active');
+  el.classList.add('active');
+  document.getElementById('tb-title').textContent=TITLES[id]||id;
+  if(id==='home')rHome();
+  if(id==='analytics'){rA();initAnalyticsCharts();}
+  if(id==='quotes'){rQ();initQuoteCharts();}
+  if(id==='pipeline'){rP();}
+  if(id==='tasks')rT();
+  if(id==='investments')rI();
+  if(id==='social')rSM();
+  if(id==='tenders')rTenders();
+  if(id==='calendar')rCalendar();
+}
+
+const om=id=>document.getElementById(id).classList.add('open');
+const cm2=id=>document.getElementById(id).classList.remove('open');
+document.querySelectorAll('.mo').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open');}));
+
+// ── HOME ──────────────────────────────────────────────────────────────────
+function rHome(){
+  const totalVal=D.quotes.reduce((s,q)=>s+q.value,0);
+  const won=D.quotes.filter(q=>q.status==='Won').length;
+  document.getElementById('h-quotes-val').textContent='£'+totalVal.toLocaleString('en-GB',{minimumFractionDigits:0});
+  document.getElementById('h-quotes-sub').textContent=D.quotes.filter(q=>q.status==='Sent'||q.status==='Follow-up').length+' active quotes';
+  document.getElementById('h-won').textContent=won;
+  document.getElementById('h-leads-sub').textContent=D.leads.length+' leads tracked';
+  const totalFol=(D.sm.li.fol||0)+(D.sm.fb.fol||0)+(D.sm.ig.fol||0);
+  document.getElementById('h-followers').textContent=totalFol.toLocaleString('en-GB');
+  document.getElementById('h-inv').textContent=D.bal.toFixed(0);
+  const pct=Math.min((D.bal/1000)*100,100);
+  document.getElementById('h-inv-pct').textContent=pct.toFixed(1)+'% of £1k goal';
+  document.getElementById('inv-donut-val').textContent=D.bal.toFixed(0);
+
+  // Pipeline bar chart
+  destroyChart('pipelineChart');
+  const pc=document.getElementById('pipelineChart');
+  if(pc){
+    const stages=['New','Contacted','Quoted','Closed'];
+    const vals=stages.map(s=>D.leads.filter(l=>l.stage===s.toLowerCase()||l.stage==='closed').length);
+    charts.pipelineChart=new Chart(pc,{type:'bar',data:{labels:stages,datasets:[{data:vals,backgroundColor:['rgba(77,159,255,0.7)','rgba(255,184,0,0.7)','rgba(232,53,58,0.7)','rgba(0,255,136,0.7)'],borderColor:['#4d9fff','#ffb800','#E8353A','#00ff88'],borderWidth:1.5,borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{stepSize:1}}}}});
+  }
+
+  // Donut
+  destroyChart('invDonut');
+  const dc=document.getElementById('invDonut');
+  if(dc){
+    charts.invDonut=new Chart(dc,{type:'doughnut',data:{datasets:[{data:[D.bal,Math.max(0,1000-D.bal)],backgroundColor:['rgba(124,58,237,0.8)','rgba(255,255,255,0.06)'],borderColor:['#7c3aed','transparent'],borderWidth:[2,0]}]},options:{responsive:true,maintainAspectRatio:true,cutout:'72%',plugins:{legend:{display:false},tooltip:{enabled:false}}}});
+  }
+
+  // Recent quotes
+  const rq=document.getElementById('h-recent-quotes');
+  if(D.quotes.length){rq.innerHTML=D.quotes.slice(0,4).map(q=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--b)"><div><div style="font-size:13px;font-weight:600">${q.client}</div><div style="font-size:11px;color:var(--t3)">${q.date?new Date(q.date).toLocaleDateString('en-GB'):''}</div></div><div style="text-align:right"><div style="font-size:13px;font-weight:700;color:var(--green)">£${q.value.toLocaleString()}</div>${bx(q.status)}</div></div>`).join('');}
+  else rq.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px">No quotes yet</div>';
+
+  // Tasks today
+  const today=new Date().toISOString().split('T')[0];
+  const todayTasks=D.tasks.filter(t=>!t.done&&t.due&&t.due<=today);
+  const ht=document.getElementById('h-tasks-today');
+  if(todayTasks.length){ht.innerHTML=todayTasks.slice(0,4).map(t=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--b)"><div class="tc ${t.done?'done':''}" onclick="tgT(${t.id});rHome()">${t.done?'✓':''}</div><div style="flex:1;font-size:13px;color:var(--t2)">${t.text}</div><span style="font-size:10px;color:var(--t3)">${t.priority}</span></div>`).join('');}
+  else ht.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:20px">All clear today! 🎉</div>';
+}
+
+// ── ANALYTICS ─────────────────────────────────────────────────────────────
+function rA(){const a=D.an;['v','p','s','b'].forEach(k=>{const e=document.getElementById('an-'+k);if(e)e.textContent=a[k];});}
+function svA(){D.an={v:document.getElementById('iv').value||'—',p:document.getElementById('ip').value||'—',s:document.getElementById('is').value||'—',b:document.getElementById('ib').value||'—'};sv();rA();}
+
+function initAnalyticsCharts(){
+  destroyChart('visitorsChart');
+  const vc=document.getElementById('visitorsChart');
+  if(vc){
+    const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+    const vals=[12,28,22,35,19,8,14];
+    charts.visitorsChart=new Chart(vc,{type:'line',data:{labels:days,datasets:[{data:vals,borderColor:'#00d4ff',backgroundColor:'rgba(0,212,255,0.08)',fill:true,tension:0.4,pointBackgroundColor:'#00d4ff',pointRadius:4,pointHoverRadius:6,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},beginAtZero:true}}}});
+  }
+  destroyChart('trafficDonut');
+  const td=document.getElementById('trafficDonut');
+  if(td){
+    charts.trafficDonut=new Chart(td,{type:'doughnut',data:{labels:['Direct','Search','Social','Referral'],datasets:[{data:[40,35,15,10],backgroundColor:['rgba(0,212,255,0.75)','rgba(0,255,136,0.75)','rgba(255,184,0,0.75)','rgba(168,85,247,0.75)'],borderColor:['transparent'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,0.5)',font:{size:11},boxWidth:10,padding:12}}}}});
+  }
+}
+
+// ── QUOTES ─────────────────────────────────────────────────────────────────
+const bx=s=>{const m={Won:'bx-g',Lost:'bx-r','Follow-up':'bx-y',Sent:'bx-b'};return`<span class="bx ${m[s]||'bx-n'}">${s}</span>`;};
+function svQ(){const q={id:Date.now(),client:document.getElementById('qc').value,contact:document.getElementById('qn').value,value:parseFloat(document.getElementById('qv2').value)||0,date:document.getElementById('qd').value,products:document.getElementById('qpr').value,status:document.getElementById('qst').value,notes:document.getElementById('qno').value};if(!q.client)return;D.quotes.unshift(q);sv();cm2('qm');rQ();initQuoteCharts();['qc','qn','qv2','qd','qpr','qno'].forEach(id=>document.getElementById(id).value='');}
+const dQ=id=>{D.quotes=D.quotes.filter(q=>q.id!==id);sv();rQ();initQuoteCharts();};
+const uQ=(id,s)=>{const q=D.quotes.find(q=>q.id===id);if(q){q.status=s;sv();rQ();initQuoteCharts();}};
+function rQ(){
+  const tb=document.getElementById('qtb');
+  tb.innerHTML=D.quotes.length?D.quotes.map(q=>`<tr><td><strong style="color:var(--t)">${q.client}</strong><br><span style="font-size:11px;color:var(--t3)">${q.products||''}</span></td><td>${q.contact||'—'}</td><td style="color:var(--green);font-weight:600">£${q.value.toLocaleString('en-GB',{minimumFractionDigits:2})}</td><td style="font-size:12px">${q.date?new Date(q.date).toLocaleDateString('en-GB'):'—'}</td><td>${bx(q.status)}</td><td><select onchange="uQ(${q.id},this.value)" style="background:var(--bg3);border:1px solid var(--b);color:var(--t2);padding:3px 8px;border-radius:6px;font-size:11px">${['Sent','Follow-up','Won','Lost'].map(s=>`<option ${s===q.status?'selected':''}>${s}</option>`).join('')}</select> <button onclick="dQ(${q.id})" style="background:none;border:none;color:var(--t3);cursor:pointer">✕</button></td></tr>`).join(''):'<tr><td colspan="6" style="text-align:center;color:var(--t3);padding:48px">No quotes yet</td></tr>';
+  document.getElementById('qt').textContent=D.quotes.length;
+  document.getElementById('qp').textContent=D.quotes.filter(q=>q.status==='Sent'||q.status==='Follow-up').length;
+  document.getElementById('qw').textContent=D.quotes.filter(q=>q.status==='Won').length;
+  document.getElementById('qv').textContent='£'+D.quotes.reduce((s,q)=>s+q.value,0).toLocaleString('en-GB',{minimumFractionDigits:2});
+}
+
+function initQuoteCharts(){
+  destroyChart('quoteStatusChart');
+  const qsc=document.getElementById('quoteStatusChart');
+  if(qsc){
+    const statuses=['Sent','Follow-up','Won','Lost'];
+    const vals=statuses.map(s=>D.quotes.filter(q=>q.status===s).length);
+    charts.quoteStatusChart=new Chart(qsc,{type:'bar',data:{labels:statuses,datasets:[{data:vals,backgroundColor:['rgba(77,159,255,0.7)','rgba(255,184,0,0.7)','rgba(0,255,136,0.7)','rgba(232,53,58,0.7)'],borderColor:['#4d9fff','#ffb800','#00ff88','#E8353A'],borderWidth:1.5,borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{display:false}},y:{grid:{color:'rgba(255,255,255,0.04)'},ticks:{stepSize:1},beginAtZero:true}}}});
+  }
+  destroyChart('quoteValueChart');
+  const qvc=document.getElementById('quoteValueChart');
+  if(qvc){
+    const statuses=['Sent','Follow-up','Won','Lost'];
+    const vals=statuses.map(s=>D.quotes.filter(q=>q.status===s).reduce((t,q)=>t+q.value,0));
+    charts.quoteValueChart=new Chart(qvc,{type:'doughnut',data:{labels:statuses,datasets:[{data:vals.some(v=>v>0)?vals:[1,0,0,0],backgroundColor:['rgba(77,159,255,0.7)','rgba(255,184,0,0.7)','rgba(0,255,136,0.7)','rgba(232,53,58,0.7)'],borderColor:['transparent'],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'60%',plugins:{legend:{position:'right',labels:{color:'rgba(255,255,255,0.5)',font:{size:11},boxWidth:10,padding:12}}}}});
+  }
+}
+
+// ── PIPELINE ───────────────────────────────────────────────────────────────
+function svL(){const l={id:Date.now(),org:document.getElementById('lo').value,contact:document.getElementById('lc').value,phone:document.getElementById('lp2').value,email:document.getElementById('le').value,stage:document.getElementById('ls').value,notes:document.getElementById('ln').value};if(!l.org)return;D.leads.unshift(l);sv();cm2('lm');rP();}
+const mL=(id,s)=>{const l=D.leads.find(l=>l.id===id);if(l){l.stage=s;sv();rP();}};
+const dL=id=>{D.leads=D.leads.filter(l=>l.id!==id);sv();rP();};
+function rP(){
+  ['new','contacted','quoted','closed'].forEach(st=>{
+    const col=document.getElementById('cl-'+st);
+    const leads=D.leads.filter(l=>l.stage===st);
+    const ids={new:'cn',contacted:'cc',quoted:'cq',closed:'ck'};
+    const pids={new:'pl-new',contacted:'pl-cont',quoted:'pl-quot',closed:'pl-clos'};
+    document.getElementById(ids[st]).textContent=leads.length;
+    if(document.getElementById(pids[st]))document.getElementById(pids[st]).textContent=leads.length;
+    col.innerHTML=leads.map(l=>`<div class="kd"><div class="kd-n">${l.org}</div><div class="kd-s">${l.contact||'—'}</div>${l.phone?`<div class="kd-s" style="margin-top:3px">📞 ${l.phone}</div>`:''}<div style="margin-top:10px;display:flex;gap:4px;flex-wrap:wrap">${['new','contacted','quoted','closed'].filter(s=>s!==st).map(s=>`<button onclick="mL(${l.id},'${s}')" class="btn btn-s" style="font-size:10px;padding:2px 8px">${s}</button>`).join('')}<button onclick="dL(${l.id})" style="background:none;border:none;color:var(--r);cursor:pointer;font-size:11px;padding:2px 4px">✕</button></div></div>`).join('')||'<div style="color:var(--t3);font-size:12px;text-align:center;padding:16px">Empty</div>';
+  });
+}
+
+// ── TASKS ──────────────────────────────────────────────────────────────────
+function svT(){const t={id:Date.now(),text:document.getElementById('tt2').value,due:document.getElementById('td2').value,priority:document.getElementById('tp').value,done:false};if(!t.text)return;D.tasks.unshift(t);sv();cm2('tm');rT();document.getElementById('tt2').value='';}
+const tgT=id=>{const t=D.tasks.find(t=>t.id===id);if(t){t.done=!t.done;sv();rT();}};
+const dT=id=>{D.tasks=D.tasks.filter(t=>t.id!==id);sv();rT();};
+function rT(){
+  const todo=D.tasks.filter(t=>!t.done),done=D.tasks.filter(t=>t.done);
+  document.getElementById('tdc').textContent=todo.length?`(${todo.length})`:'';
+  const rl=(tasks,el)=>{document.getElementById(el).innerHTML=tasks.length?tasks.map(t=>`<div class="ti"><div class="tc ${t.done?'done':''}" onclick="tgT(${t.id})">${t.done?'✓':''}</div><div style="flex:1"><div class="tt ${t.done?'done':''}">${t.text}</div><div class="tm">${t.due?new Date(t.due).toLocaleDateString('en-GB')+' · ':''}${t.priority}</div></div><button onclick="dT(${t.id})" style="background:none;border:none;color:var(--t3);cursor:pointer">✕</button></div>`).join(''):`<div style="color:var(--t3);font-size:13px;text-align:center;padding:28px">${el==='td'?'All done! 🎉':'Nothing yet'}</div>`;};
+  rl(todo,'td');rl(done,'tc2');
+}
+
+// ── INVESTMENTS ────────────────────────────────────────────────────────────
+async function fp(){const el=document.getElementById('lp');el.innerHTML='<div style="color:var(--t3);font-size:13px"><span class="sp"></span> Loading...</div>';let h='';for(const sym of D.wl){try{const ic=['BTC','ETH','DOGE','XRP','SOL','ADA'].includes(sym);let pr='—',ch='—',pos=true;if(ic){const r=await fetch(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${sym}&to_currency=USD&apikey=${AK}`);const d=await r.json();const rt=d['Realtime Currency Exchange Rate'];if(rt)pr='$'+parseFloat(rt['5. Exchange Rate']).toFixed(2);}else{const r=await fetch(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${sym}&apikey=${AK}`);const d=await r.json();const q=d['Global Quote'];if(q&&q['05. price']){pr='$'+parseFloat(q['05. price']).toFixed(2);const c=parseFloat(q['10. change percent']);pos=c>=0;ch=(pos?'+':'')+c.toFixed(2)+'%';}}h+=`<div class="ri"><span class="ris">${sym}</span><span class="rip" style="color:var(--t)">${pr}</span><span class="ric ${pos?'pos':'neg'}">${ch}</span><button onclick="rw('${sym}')" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:11px">✕</button></div>`;}catch(e){h+=`<div class="ri"><span class="ris">${sym}</span><span style="color:var(--t3);font-size:13px">Error</span></div>`;}}el.innerHTML=h||'<div style="color:var(--t3);font-size:13px">Empty watchlist</div>';}
+function aw(){const s=document.getElementById('ws').value.trim().toUpperCase();if(!s)return;if(!D.wl.includes(s))D.wl.push(s);document.getElementById('ws').value='';sv();fp();}
+const rw=s=>{D.wl=D.wl.filter(x=>x!==s);sv();fp();};
+function svP(){const p={id:Date.now(),symbol:document.getElementById('ps').value.toUpperCase(),name:document.getElementById('pn').value,amount:parseFloat(document.getElementById('pa').value)||0,buy:parseFloat(document.getElementById('pb2').value)||0};if(!p.symbol)return;D.pf.push(p);sv();cm2('im');rPf();up();}
+const dPf=id=>{D.pf=D.pf.filter(p=>p.id!==id);sv();rPf();up();};
+function rPf(){const el=document.getElementById('pl2');if(!D.pf.length){el.innerHTML='<div style="color:var(--t3);font-size:13px">No positions yet</div>';return;}D.bal=50+D.pf.reduce((s,p)=>s+p.amount,0);el.innerHTML=D.pf.map(p=>`<div class="ri"><span class="ris">${p.symbol}</span><div style="flex:1"><div style="font-size:12px;font-weight:600">${p.name||p.symbol}</div><div style="font-size:11px;color:var(--t3)">£${p.amount.toFixed(2)} @ $${p.buy}</div></div><button onclick="dPf(${p.id})" style="background:none;border:none;color:var(--t3);cursor:pointer">✕</button></div>`).join('');}
+function up(){const c=D.bal,pct=Math.min((c/1000)*100,100);['ic','inv-donut-val'].forEach(id=>{const e=document.getElementById(id);if(e)e.textContent=c.toFixed(c<100?2:0);});document.getElementById('ip2').style.width=pct+'%';document.getElementById('ipct').textContent=pct.toFixed(1)+'%';document.getElementById('ir').textContent='£'+(1000-c).toFixed(2)+' remaining';document.getElementById('ir-tile').textContent=(1000-c).toFixed(0);document.getElementById('pos-count').textContent=D.pf.length;}
+function rI(){rPf();up();}
+
+// ── AI CHATS ───────────────────────────────────────────────────────────────
+async function aiCall(msgs,sys,typingId){
+  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:1000,system:sys,messages:msgs})});const d=await r.json();return d.content[0].text;}
+  catch(e){return'Connection error. Please try again.';}
+}
+async function si(){const inp=document.getElementById('ii'),msg=inp.value.trim();if(!msg)return;inp.value='';const cm=document.getElementById('icm');cm.innerHTML+=`<div class="msg u">${msg}</div><div class="msg a" id="it"><span class="sp"></span></div>`;cm.scrollTop=cm.scrollHeight;D.ih.push({role:'user',content:msg});const sys=`You are an AI investment advisor for Liam Walsh, Director of Elite Group LCA. He's building from £50 to £1,000. Analyse world events and market trends. State risk level. Suggest specific assets. Be concise. Note this is not regulated financial advice. Portfolio: ${JSON.stringify(D.pf)}. Balance: £${D.bal.toFixed(2)}. Watchlist: ${D.wl.join(', ')}.`;const rep=await aiCall(D.ih,sys);D.ih.push({role:'assistant',content:rep});document.getElementById('it').outerHTML=`<div class="msg a">${rep.replace(/\n/g,'<br>')}</div>`;cm.scrollTop=cm.scrollHeight;if(D.ih.length>20)D.ih=D.ih.slice(-20);sv();}
+async function sa(){const inp=document.getElementById('ai2'),msg=inp.value.trim();if(!msg)return;inp.value='';const cm=document.getElementById('acm');cm.innerHTML+=`<div class="msg u">${msg}</div><div class="msg a" id="at"><span class="sp"></span></div>`;cm.scrollTop=cm.scrollHeight;D.ah.push({role:'user',content:msg});const sys=`You are an AI business assistant for Liam Walsh, Director of Elite Group LCA — managed print services, Birkenhead, Wirral. Products: Kyocera and Konica Minolta. Services: Managed Print with PaperCut (fully in-house), Account Management, Elite Service. Customers: schools and businesses, North West. Be practical, concise and professional. Quotes: ${D.quotes.length}. Leads: ${D.leads.length}.`;const rep=await aiCall(D.ah,sys);D.ah.push({role:'assistant',content:rep});document.getElementById('at').outerHTML=`<div class="msg a">${rep.replace(/\n/g,'<br>')}</div>`;document.getElementById('acm').scrollTop=9999;if(D.ah.length>20)D.ah=D.ah.slice(-20);sv();}
+const qp=t=>{document.getElementById('ai2').value=t;sa();};
+
+// ── SOCIAL MEDIA ───────────────────────────────────────────────────────────
+function svSM(){D.sm.li.fol=parseInt(document.getElementById('li-fol').value)||0;D.sm.li.reach=parseInt(document.getElementById('li-reach').value)||0;D.sm.fb.fol=parseInt(document.getElementById('fb-fol').value)||0;D.sm.fb.reach=parseInt(document.getElementById('fb-reach').value)||0;D.sm.ig.fol=parseInt(document.getElementById('ig-fol').value)||0;D.sm.ig.reach=parseInt(document.getElementById('ig-reach').value)||0;sv();rSM();}
+function rSM(){
+  const tf=(D.sm.li.fol||0)+(D.sm.fb.fol||0)+(D.sm.ig.fol||0);
+  const tr=(D.sm.li.reach||0)+(D.sm.fb.reach||0)+(D.sm.ig.reach||0);
+  document.getElementById('sm-reach').textContent=tr.toLocaleString('en-GB');
+  document.getElementById('sm-engage').textContent=Math.round(tr*0.032).toLocaleString('en-GB');
+  document.getElementById('sm-followers').textContent=tf.toLocaleString('en-GB');
+  document.getElementById('sm-posts').textContent=D.sm.posts?D.sm.posts.length:0;
+  if(document.getElementById('li-fol')){document.getElementById('li-fol').value=D.sm.li.fol||'';document.getElementById('fb-fol').value=D.sm.fb.fol||'';document.getElementById('ig-fol').value=D.sm.ig.fol||'';document.getElementById('li-reach').value=D.sm.li.reach||'';document.getElementById('fb-reach').value=D.sm.fb.reach||'';document.getElementById('ig-reach').value=D.sm.ig.reach||'';}
+  renderSavedPosts();
+}
+async function genDaily(){
+  const el=document.getElementById('daily-posts');
+  const theme=document.getElementById('post-theme').value;
+  el.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:32px"><span class="sp"></span> Generating...</div>';
+  const themeMap={general:'general brand promotion',papercut:'PaperCut print management software',schools:'schools and education sector',savings:'cost savings and tier billing',service:'Elite service excellence'};
+  const prompt=`Generate 3 social media posts for Elite Group LCA, managed print services, Birkenhead Wirral. Focus: ${themeMap[theme]||'general'}. Facts: Kyocera & Konica Minolta dealer, PaperCut in-house, 99% uptime, 98% first fix, 30s call answer, tier billing, 30% avg savings, 100+ schools. Strapline: "Print with Confidence, Every Time". Create one for LinkedIn (professional, 150-200 words, 3-5 hashtags), Facebook (friendly, 100-150 words), Instagram (80-100 words, 8-10 hashtags, emojis). Format each with the platform name as a header.`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();const text=d.content[0].text;
+    const pColors={'LinkedIn':'#0077b5','Facebook':'#1877f2','Instagram':'#e1306c'};
+    const pIcons={'LinkedIn':'in','Facebook':'f','Instagram':'📷'};
+    let html='<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px">';
+    ['LinkedIn','Facebook','Instagram'].forEach(p=>{
+      const rx=new RegExp(`(?:^|\\n)${p}[^\\n]*\\n([\\s\\S]*?)(?=\\n(?:LinkedIn|Facebook|Instagram)|$)`,'i');
+      const match=text.match(rx);
+      const postText=(match?match[1]:text).trim();
+      html+=`<div style="background:var(--bg3);border:1px solid var(--b);border-radius:14px;padding:18px;position:relative;overflow:hidden"><div style="position:absolute;top:0;left:0;right:0;height:2px;background:${pColors[p]}"></div><div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;margin-top:6px"><div style="width:26px;height:26px;border-radius:7px;background:${pColors[p]};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700">${pIcons[p]}</div><span style="font-size:12px;font-weight:700">${p}</span></div><div style="font-size:12px;color:var(--t2);line-height:1.7;white-space:pre-wrap;max-height:200px;overflow-y:auto">${postText}</div><div style="margin-top:12px;display:flex;gap:6px"><button onclick="copyPost(this)" data-text="${encodeURIComponent(postText)}" class="btn btn-s btn-xs">📋 Copy</button><button onclick="saveDailyPost('${p}',this)" data-text="${encodeURIComponent(postText)}" class="btn btn-p btn-xs">Save</button></div></div>`;
+    });
+    html+='</div>';el.innerHTML=html;
+  }catch(e){el.innerHTML='<div style="color:var(--r);font-size:13px;text-align:center;padding:24px">Error. Please try again.</div>';}
+}
+function copyPost(btn){const t=decodeURIComponent(btn.getAttribute('data-text'));navigator.clipboard.writeText(t).then(()=>{const o=btn.textContent;btn.textContent='✓ Copied!';setTimeout(()=>btn.textContent=o,2000);});}
+function saveDailyPost(platform,btn){const t=decodeURIComponent(btn.getAttribute('data-text'));if(!D.sm.posts)D.sm.posts=[];D.sm.posts.unshift({id:Date.now(),platform,text:t,date:new Date().toLocaleDateString('en-GB')});sv();renderSavedPosts();populateCalSavedSelect();const o=btn.textContent;btn.textContent='✓ Saved!';setTimeout(()=>btn.textContent=o,2000);}
+function populateCalSavedSelect(){const sel=document.getElementById('cal-saved-select');if(!sel)return;sel.innerHTML='<option value="">— Select a saved post —</option>';if(D.sm&&D.sm.posts){D.sm.posts.forEach((p,i)=>{sel.innerHTML+=`<option value="${i}">[${p.platform}] ${(p.text||'').substring(0,60)}...</option>`;});}}
+function saveAdPost(){const t=document.getElementById('ad-output').textContent,p=document.getElementById('ad-platform').value;if(!D.sm.posts)D.sm.posts=[];D.sm.posts.unshift({id:Date.now(),platform:p,text:t,date:new Date().toLocaleDateString('en-GB'),isAd:true});sv();renderSavedPosts();}
+function deletePost(id){D.sm.posts=D.sm.posts.filter(p=>p.id!==id);sv();renderSavedPosts();}
+function renderSavedPosts(){
+  const el=document.getElementById('saved-posts'),cnt=document.getElementById('post-count');
+  if(cnt)cnt.textContent=(D.sm.posts?D.sm.posts.length:0)+' saved';
+  if(!D.sm.posts||!D.sm.posts.length){if(el)el.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No posts saved yet</div>';return;}
+  const pColors={'LinkedIn':'#0077b5','Facebook':'#1877f2','Instagram':'#e1306c'};
+  const pIcons={'LinkedIn':'in','Facebook':'f','Instagram':'📷'};
+  if(el)el.innerHTML=D.sm.posts.map(p=>`<div style="display:flex;gap:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--b);border-radius:12px;margin-bottom:8px;align-items:flex-start"><div style="width:26px;height:26px;border-radius:7px;background:${pColors[p.platform]||'#666'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0">${pIcons[p.platform]||'?'}</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:12px;font-weight:600">${p.platform}</span>${p.isAd?'<span class="bx bx-r" style="font-size:9px">Ad</span>':'<span class="bx bx-c" style="font-size:9px">Post</span>'}<span style="font-size:10px;color:var(--t3);margin-left:auto">${p.date}</span></div><div style="font-size:12px;color:var(--t2);line-height:1.5;max-height:60px;overflow:hidden">${(p.text||'').substring(0,180)}${(p.text||'').length>180?'...':''}</div></div><div style="display:flex;gap:4px;flex-shrink:0"><button onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(p.text||'')}'))" class="btn btn-s btn-xs">📋</button><button onclick="deletePost(${p.id})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px">✕</button></div></div>`).join('');
+}
+async function genAd(){const p=document.getElementById('ad-platform').value,t=document.getElementById('ad-type').value,tn=document.getElementById('ad-tone').value;const ow=document.getElementById('ad-output-wrap'),out=document.getElementById('ad-output');ow.style.display='block';out.textContent='Generating...';const prompt=`Write a ${tn.toLowerCase()} ${p} advertisement for Elite Group LCA promoting: ${t}. Company: managed print, Birkenhead Wirral. Kyocera & Konica Minolta dealer, PaperCut included, tier billing, 30% savings, 99% uptime, 98% first fix, 30s call answer, 100+ schools. Include headline, body copy, call to action, hashtags. Phone: 0151 317 8848 | elitegrouplca.com`;try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:800,messages:[{role:'user',content:prompt}]})});const d=await r.json();out.textContent=d.content[0].text;}catch(e){out.textContent='Error. Please try again.';}}
+
+// ── TENDER WATCH ───────────────────────────────────────────────────────────
+function rTenders(){
+  document.getElementById('t-total').textContent=D.tenders.tracked?D.tenders.tracked.length:0;
+  document.getElementById('t-new').textContent=D.tenders.tracked?D.tenders.tracked.filter(t=>t.score==='Hot').length:0;
+  document.getElementById('t-tracked').textContent=D.tenders.tracked?D.tenders.tracked.length:0;
+  document.getElementById('t-won').textContent=D.tenders.won?D.tenders.won.length:0;
+  if(D.tenders.lastFetch)document.getElementById('tender-updated').textContent='Updated: '+D.tenders.lastFetch;
+  renderTracked();renderWon();
+}
+async function fetchTenders(){
+  const feed=document.getElementById('tender-feed');
+  const region=document.getElementById('t-region').value;
+  const sector=document.getElementById('t-sector').value;
+  feed.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:48px"><span class="sp"></span><br><br>AI researching North West procurement portals...</div>';
+  const rMap={all:'North West England',merseyside:'Merseyside',manchester:'Greater Manchester',lancashire:'Lancashire',cheshire:'Cheshire',wirral:'Wirral'};
+  const sMap={all:'all sectors',education:'schools and education',council:'local authorities',nhs:'NHS and healthcare',housing:'housing associations'};
+  const prompt=`You are a procurement intelligence assistant. Generate a realistic list of 8-10 copier/printer/managed print service contract opportunities in ${rMap[region]||'North West England'} for ${sMap[sector]||'all sectors'}. Base on typical UK procurement cycles and organisations in this region. For each: org name, sector, location, estimated annual value, renewal reason, score (Hot/Warm/Cold), recommended action. Return ONLY a JSON array with fields: org, sector, location, value, reason, score, action. No other text.`;
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+    const d=await r.json();
+    let text=d.content[0].text.trim().replace(/```json/g,'').replace(/```/g,'').trim();
+    const opps=JSON.parse(text);
+    const now=new Date().toLocaleString('en-GB');
+    D.tenders.lastFetch=now;
+    document.getElementById('tender-updated').textContent='Updated: '+now;
+    document.getElementById('t-total').textContent=opps.length;
+    document.getElementById('t-new').textContent=opps.filter(o=>o.score==='Hot').length;
+    const sColors={Hot:'bx-r',Warm:'bx-y',Cold:'bx-b'};
+    const sEmoji={Hot:'🔥',Warm:'⚡',Cold:'❄️'};
+    feed.innerHTML=opps.map(o=>`<div style="display:flex;align-items:flex-start;gap:14px;padding:16px;background:var(--bg3);border:1px solid var(--b);border-radius:14px;margin-bottom:10px;transition:all .2s" onmouseover="this.style.borderColor='rgba(255,255,255,0.12)'" onmouseout="this.style.borderColor='rgba(255,255,255,0.07)'"><div style="width:42px;height:42px;border-radius:12px;background:${o.score==='Hot'?'var(--rg)':o.score==='Warm'?'var(--amber2)':'var(--cyan2)'};display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0">${sEmoji[o.score]||'📋'}</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px"><span style="font-size:14px;font-weight:600">${o.org}</span><span class="bx ${sColors[o.score]||'bx-n'}">${o.score}</span><span class="bx bx-n">${o.sector}</span></div><div style="font-size:12px;color:var(--t2);margin-bottom:4px">📍 ${o.location} &nbsp;·&nbsp; 💰 ${o.value} &nbsp;·&nbsp; ${o.reason}</div><div style="font-size:12px;color:var(--t3);font-style:italic">${o.action}</div></div><button onclick='trackOpportunity(${JSON.stringify(o).replace(/'/g,"&#39;")})' class="btn btn-s btn-xs" style="flex-shrink:0">Track</button></div>`).join('');
+    sv();
+  }catch(e){feed.innerHTML='<div style="color:var(--r);font-size:13px;text-align:center;padding:32px">Error loading. Please try again.</div>';}
+}
+function trackOpportunity(opp){if(!D.tenders.tracked)D.tenders.tracked=[];if(D.tenders.tracked.find(t=>t.org===opp.org))return;D.tenders.tracked.unshift({...opp,id:Date.now(),trackedDate:new Date().toLocaleDateString('en-GB')});sv();renderTracked();document.getElementById('t-tracked').textContent=D.tenders.tracked.length;}
+function untrackOpp(id){D.tenders.tracked=D.tenders.tracked.filter(t=>t.id!==id);sv();renderTracked();}
+function renderTracked(){const el=document.getElementById('tracked-list');if(!D.tenders.tracked||!D.tenders.tracked.length){el.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">None tracked</div>';return;}const sc={Hot:'bx-r',Warm:'bx-y',Cold:'bx-b'};el.innerHTML=D.tenders.tracked.map(t=>`<div style="padding:12px 14px;background:var(--bg3);border:1px solid var(--b);border-radius:12px;margin-bottom:8px"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:13px;font-weight:600;flex:1">${t.org}</span><span class="bx ${sc[t.score]||'bx-n'}">${t.score}</span><button onclick="untrackOpp(${t.id})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px">✕</button></div><div style="font-size:11px;color:var(--t3)">📍 ${t.location} · ${t.sector}</div></div>`).join('');}
+function svWin(){const w={id:Date.now(),org:document.getElementById('w-org').value,contact:document.getElementById('w-contact').value,value:parseFloat(document.getElementById('w-value').value)||0,date:document.getElementById('w-date').value,sector:document.getElementById('w-sector').value,notes:document.getElementById('w-notes').value};if(!w.org)return;if(!D.tenders.won)D.tenders.won=[];D.tenders.won.unshift(w);sv();cm2('won-modal');renderWon();document.getElementById('t-won').textContent=D.tenders.won.length;['w-org','w-contact','w-value','w-date','w-notes'].forEach(id=>document.getElementById(id).value='');}
+function renderWon(){const el=document.getElementById('won-list');if(!D.tenders.won||!D.tenders.won.length){el.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No wins yet!</div>';return;}const tv=D.tenders.won.reduce((s,w)=>s+w.value,0);el.innerHTML=`<div style="background:var(--green2);border-radius:10px;padding:12px 14px;margin-bottom:12px;text-align:center"><div style="font-size:22px;font-weight:800;color:var(--green)">£${tv.toLocaleString('en-GB')}</div><div style="font-size:11px;color:var(--green);margin-top:2px">Total annual value</div></div>`+D.tenders.won.map(w=>`<div style="padding:10px 14px;background:var(--bg3);border:1px solid var(--b);border-radius:10px;margin-bottom:8px"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;font-weight:600">${w.org}</span><span style="font-size:13px;font-weight:700;color:var(--green)">£${w.value.toLocaleString()}/yr</span></div><div style="font-size:11px;color:var(--t3);margin-top:3px">${w.sector}${w.date?' · '+new Date(w.date).toLocaleDateString('en-GB'):''}</div></div>`).join('');}
+async function sendTenderChat(){const inp=document.getElementById('tender-input'),msg=inp.value.trim();if(!msg)return;inp.value='';const cm=document.getElementById('tender-chat');cm.innerHTML+=`<div class="msg u">${msg}</div><div class="msg a" id="tc-t"><span class="sp"></span></div>`;cm.scrollTop=cm.scrollHeight;if(!D.tenders.tenderHistory)D.tenders.tenderHistory=[];D.tenders.tenderHistory.push({role:'user',content:msg});const sys=`You are a procurement intelligence assistant for Elite Group LCA, managed print, Birkenhead Wirral. Help identify copier contract opportunities in North West England. Tracked: ${D.tenders.tracked?D.tenders.tracked.length:0}. Won: ${D.tenders.won?D.tenders.won.length:0}. Be specific and practical.`;const rep=await aiCall(D.tenders.tenderHistory,sys);D.tenders.tenderHistory.push({role:'assistant',content:rep});document.getElementById('tc-t').outerHTML=`<div class="msg a">${rep.replace(/\n/g,'<br>')}</div>`;cm.scrollTop=cm.scrollHeight;if(D.tenders.tenderHistory.length>20)D.tenders.tenderHistory=D.tenders.tenderHistory.slice(-20);sv();}
+
+
+// ── CONTENT CALENDAR ──────────────────────────────────────────────────────
+if(!D.calendar)D.calendar={posts:[],currentYear:new Date().getFullYear(),currentMonth:new Date().getMonth()};
+let calFilter='all';
+
+function setCalFilter(f,el){
+  calFilter=f;
+  document.querySelectorAll('.cal-filter').forEach(b=>b.classList.remove('active-filter'));
+  el.classList.add('active-filter');
+  rCalendar();
+}
+
+function calNav(dir){
+  D.calendar.currentMonth+=dir;
+  if(D.calendar.currentMonth>11){D.calendar.currentMonth=0;D.calendar.currentYear++;}
+  if(D.calendar.currentMonth<0){D.calendar.currentMonth=11;D.calendar.currentYear--;}
+  sv();rCalendar();
+}
+
+function rCalendar(){
+  if(!D.calendar)D.calendar={posts:[],currentYear:new Date().getFullYear(),currentMonth:new Date().getMonth()};
+  const y=D.calendar.currentYear,m=D.calendar.currentMonth;
+  const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('cal-month-label').textContent=monthNames[m]+' '+y;
+
+  // Filter posts
+  const filtered=calFilter==='all'?D.calendar.posts:D.calendar.posts.filter(p=>p.platform===calFilter||p.platform==='All Platforms');
+  const monthPosts=filtered.filter(p=>{const d=new Date(p.date);return d.getFullYear()===y&&d.getMonth()===m;});
+
+  // Stats
+  document.getElementById('cal-total').textContent=monthPosts.length;
+  document.getElementById('cal-posted').textContent=monthPosts.filter(p=>p.status==='posted').length;
+  document.getElementById('cal-scheduled').textContent=monthPosts.filter(p=>p.status==='scheduled').length;
+  const plats=new Set(monthPosts.map(p=>p.platform==='All Platforms'?'3':p.platform));
+  document.getElementById('cal-platforms').textContent=plats.size;
+
+  // Build calendar grid
+  const grid=document.getElementById('cal-grid');
+  const today=new Date();
+  const firstDay=new Date(y,m,1);
+  let startDow=firstDay.getDay()-1; // Mon=0
+  if(startDow<0)startDow=6;
+  const daysInMonth=new Date(y,m+1,0).getDate();
+  const daysInPrev=new Date(y,m,0).getDate();
+  const totalCells=Math.ceil((startDow+daysInMonth)/7)*7;
+
+  let html='';
+  for(let i=0;i<totalCells;i++){
+    let day,isCurrentMonth=true;
+    if(i<startDow){day=daysInPrev-startDow+i+1;isCurrentMonth=false;}
+    else if(i-startDow>=daysInMonth){day=i-startDow-daysInMonth+1;isCurrentMonth=false;}
+    else day=i-startDow+1;
+
+    const isToday=isCurrentMonth&&day===today.getDate()&&m===today.getMonth()&&y===today.getFullYear();
+    const dateStr=`${y}-${String(m+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dayPosts=D.calendar.posts.filter(p=>p.date===dateStr&&(calFilter==='all'||p.platform===calFilter||p.platform==='All Platforms'));
+
+    const pColors={'LinkedIn':'#0077b5','Facebook':'#1877f2','Instagram':'#e1306c','All Platforms':'var(--r)'};
+    const pips=dayPosts.slice(0,3).map(p=>`<div class="cal-pip" style="background:${pColors[p.platform]||'var(--r)'}${p.status==='posted'?'':'88'};opacity:${p.status==='posted'?'1':'0.8'}">${p.status==='posted'?'✓':'•'} ${(p.platform==='All Platforms'?'All':p.platform.substring(0,2))}</div>`).join('');
+    const extra=dayPosts.length>3?`<div style="font-size:9px;color:var(--t3)">+${dayPosts.length-3} more</div>`:'';
+
+    html+=`<div class="cal-day ${isToday?'today':''} ${isCurrentMonth?'':'other-month'}" onclick="quickAddPost('${dateStr}')">
+      <div class="cal-day-num">${day}</div>
+      ${pips}${extra}
+    </div>`;
+  }
+  grid.innerHTML=html;
+
+  // Upcoming posts
+  const now=new Date().toISOString().split('T')[0];
+  const upcoming=(calFilter==='all'?D.calendar.posts:D.calendar.posts.filter(p=>p.platform===calFilter||p.platform==='All Platforms')).filter(p=>p.date>=now&&p.status==='scheduled').sort((a,b)=>a.date.localeCompare(b.date)).slice(0,8);
+  const upEl=document.getElementById('cal-upcoming');
+  if(upcoming.length){
+    upEl.innerHTML=upcoming.map(p=>calPostCard(p)).join('');
+  } else upEl.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">No upcoming posts</div>';
+
+  // Posted
+  const posted=(calFilter==='all'?D.calendar.posts:D.calendar.posts.filter(p=>p.platform===calFilter||p.platform==='All Platforms')).filter(p=>p.status==='posted').sort((a,b)=>b.date.localeCompare(a.date)).slice(0,8);
+  const postedEl=document.getElementById('cal-posted-list');
+  if(posted.length){
+    postedEl.innerHTML=posted.map(p=>calPostCard(p)).join('');
+  } else postedEl.innerHTML='<div style="color:var(--t3);font-size:13px;text-align:center;padding:24px">None posted yet</div>';
+
+  // Performance summary
+  const perfSum=getCalPerfSummary();
+  const psSec=document.getElementById('cal-perf-summary');
+  if(psSec){
+    if(perfSum){
+      psSec.style.display='block';
+      document.getElementById('cal-ps-likes').textContent=perfSum.totalLikes.toLocaleString();
+      document.getElementById('cal-ps-comments').textContent=perfSum.totalComments.toLocaleString();
+      document.getElementById('cal-ps-reach').textContent=perfSum.totalReach.toLocaleString();
+      document.getElementById('cal-ps-clicks').textContent=perfSum.totalClicks.toLocaleString();
+    } else psSec.style.display='none';
+  }
+
+  // Populate saved posts dropdown in modal
+  const sel=document.getElementById('cal-saved-select');
+  if(sel){
+    sel.innerHTML='<option value="">— Select a saved post —</option>';
+    if(D.sm&&D.sm.posts){D.sm.posts.forEach((p,i)=>{sel.innerHTML+=`<option value="${i}">[${p.platform}] ${(p.text||'').substring(0,60)}...</option>`;});}
+  }
+}
+
+function calPostCard(p){
+  const pColors={'LinkedIn':'#0077b5','Facebook':'#1877f2','Instagram':'#e1306c','All Platforms':'var(--r)'};
+  const d=new Date(p.date);
+  const dateStr=d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});
+  const perf=p.perf||{likes:0,comments:0,reach:0,clicks:0};
+  const eng=perf.reach>0?((perf.likes+perf.comments+perf.clicks)/perf.reach*100).toFixed(1):0;
+  const hasPerf=perf.likes||perf.comments||perf.reach||perf.clicks;
+  return `<div style="padding:14px;background:var(--bg3);border:1px solid var(--b);border-radius:14px;margin-bottom:10px;position:relative;overflow:hidden">
+    <div style="position:absolute;left:0;top:0;bottom:0;width:3px;background:${pColors[p.platform]||'var(--r)'}"></div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;padding-left:6px">
+      <span style="font-size:11px;font-weight:700;color:${pColors[p.platform]||'var(--r)'}">${p.platform}</span>
+      <span style="font-size:9px;color:var(--t3)">${p.type||'Post'}</span>
+      <span class="bx ${p.status==='posted'?'bx-g':'bx-c'}" style="font-size:9px">${p.status==='posted'?'✓ Posted':'Scheduled'}</span>
+      <span style="font-size:10px;color:var(--t3);margin-left:auto">${dateStr}</span>
+    </div>
+    <div style="font-size:12px;color:var(--t2);padding-left:6px;max-height:40px;overflow:hidden;line-height:1.5;margin-bottom:8px">${(p.content||'No content').substring(0,100)}${(p.content||'').length>100?'...':''}</div>
+    ${p.status==='posted'?`
+    <div style="padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;margin:0 0 8px 6px;border:1px solid var(--b)">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:${hasPerf?'10px':'0'}">
+        <span style="font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.1em">Performance</span>
+        ${hasPerf?`<span style="font-size:10px;color:var(--cyan);font-weight:600">${eng}% engagement</span>`:'<span style="font-size:10px;color:var(--t3)">No data yet</span>'}
+      </div>
+      ${hasPerf?`
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--r)">${(perf.likes||0).toLocaleString()}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Likes</div></div>
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--cyan)">${(perf.comments||0).toLocaleString()}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Comments</div></div>
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--purple)">${(perf.reach||0).toLocaleString()}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Reach</div></div>
+        <div style="text-align:center"><div style="font-size:16px;font-weight:800;color:var(--green)">${(perf.clicks||0).toLocaleString()}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">Clicks</div></div>
+      </div>`:''}
+      <button onclick="openPerfModal(${p.id})" class="btn btn-s" style="font-size:10px;padding:3px 10px;margin-top:${hasPerf?'10px':'0px'};width:100%">${hasPerf?'✏️ Update Stats':'+ Add Performance Stats'}</button>
+    </div>`:''}
+    <div style="display:flex;gap:6px;padding-left:6px">
+      ${p.status==='scheduled'?`<button onclick="markPosted(${p.id})" class="btn btn-s" style="font-size:10px;padding:3px 10px;color:var(--green);border-color:rgba(0,255,136,0.3)">✓ Mark Posted</button>`:''}
+      <button onclick="copyCalPost(${p.id})" class="btn btn-s" style="font-size:10px;padding:3px 10px">📋 Copy</button>
+      <button onclick="deleteCalPost(${p.id})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:12px;margin-left:auto">✕</button>
+    </div>
+  </div>`;
+}
+
+function quickAddPost(date){
+  document.getElementById('cal-date').value=date;
+  om('cal-modal');
+}
+
+function loadSavedPost(){
+  const sel=document.getElementById('cal-saved-select');
+  const idx=parseInt(sel.value);
+  if(isNaN(idx)||!D.sm||!D.sm.posts[idx])return;
+  const post=D.sm.posts[idx];
+  document.getElementById('cal-content').value=post.text||'';
+  document.getElementById('cal-platform').value=post.platform||'LinkedIn';
+}
+
+async function calGenPost(){
+  const prompt=document.getElementById('cal-ai-prompt').value.trim();
+  const platform=document.getElementById('cal-platform').value;
+  if(!prompt)return;
+  const btn=document.querySelector('[onclick="calGenPost()"]');
+  const orig=btn.textContent;btn.textContent='⏳ Generating...';
+  try{
+    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:600,messages:[{role:'user',content:`Write a ${platform} post for Elite Group LCA about: ${prompt}. Elite Group: managed print services, Birkenhead Wirral, Kyocera & Konica Minolta dealer, PaperCut in-house, 99% uptime, 98% first fix, 30s call answer, 30% avg savings. Strapline: "Print with Confidence, Every Time". Make it compelling with relevant hashtags.`}]})});
+    const d=await r.json();
+    document.getElementById('cal-content').value=d.content[0].text;
+  }catch(e){alert('Error generating. Please try again.');}
+  btn.textContent=orig;
+}
+
+function saveCalPost(){
+  const date=document.getElementById('cal-date').value;
+  const platform=document.getElementById('cal-platform').value;
+  const content=document.getElementById('cal-content').value;
+  const type=document.getElementById('cal-type').value;
+  const status=document.getElementById('cal-status').value;
+  const notes=document.getElementById('cal-notes').value;
+  if(!date||!content){alert('Please add a date and content');return;}
+  if(!D.calendar.posts)D.calendar.posts=[];
+  D.calendar.posts.push({id:Date.now(),date,platform,content,type,status,notes});
+  // Set calendar to show the month of the post
+  const d=new Date(date);
+  D.calendar.currentYear=d.getFullYear();
+  D.calendar.currentMonth=d.getMonth();
+  sv();cm2('cal-modal');rCalendar();
+  // Clear form
+  ['cal-date','cal-content','cal-notes','cal-ai-prompt'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});
+}
+
+function markPosted(id){
+  const p=D.calendar.posts.find(p=>p.id===id);
+  if(p){p.status='posted';sv();rCalendar();}
+}
+
+function copyCalPost(id){
+  const p=D.calendar.posts.find(p=>p.id===id);
+  if(p)navigator.clipboard.writeText(p.content||'').then(()=>{});
+}
+
+function deleteCalPost(id){
+  D.calendar.posts=D.calendar.posts.filter(p=>p.id!==id);
+  sv();rCalendar();
+}
+
+
+// ── POST PERFORMANCE ───────────────────────────────────────────────────────
+function openPerfModal(id){
+  const p=D.calendar.posts.find(p=>p.id===id);
+  if(!p)return;
+  document.getElementById('perf-post-id').value=id;
+  const perf=p.perf||{likes:0,comments:0,reach:0,clicks:0};
+  document.getElementById('perf-likes').value=perf.likes||'';
+  document.getElementById('perf-comments').value=perf.comments||'';
+  document.getElementById('perf-reach').value=perf.reach||'';
+  document.getElementById('perf-clicks').value=perf.clicks||'';
+  updatePerfCalc();
+  om('perf-modal');
+}
+
+function updatePerfCalc(){
+  const likes=parseInt(document.getElementById('perf-likes').value)||0;
+  const comments=parseInt(document.getElementById('perf-comments').value)||0;
+  const reach=parseInt(document.getElementById('perf-reach').value)||0;
+  const clicks=parseInt(document.getElementById('perf-clicks').value)||0;
+  const calc=document.getElementById('perf-calc');
+  if(likes||comments||reach||clicks){
+    calc.style.display='block';
+    const total=likes+comments+clicks;
+    const eng=reach>0?(total/reach*100).toFixed(2):0;
+    document.getElementById('perf-eng-rate').textContent=eng+'%';
+    document.getElementById('perf-total-eng').textContent=total.toLocaleString();
+  } else {
+    calc.style.display='none';
+  }
+}
+
+// Live calc as user types
+['perf-likes','perf-comments','perf-reach','perf-clicks'].forEach(id=>{
+  setTimeout(()=>{const el=document.getElementById(id);if(el)el.addEventListener('input',updatePerfCalc);},1000);
+});
+
+function savePerfStats(){
+  const id=parseInt(document.getElementById('perf-post-id').value);
+  const p=D.calendar.posts.find(p=>p.id===id);
+  if(!p)return;
+  p.perf={
+    likes:parseInt(document.getElementById('perf-likes').value)||0,
+    comments:parseInt(document.getElementById('perf-comments').value)||0,
+    reach:parseInt(document.getElementById('perf-reach').value)||0,
+    clicks:parseInt(document.getElementById('perf-clicks').value)||0
+  };
+  p.status='posted';
+  sv();cm2('perf-modal');rCalendar();
+  // Update overall social stats
+  updateSocialPerfStats();
+}
+
+function updateSocialPerfStats(){
+  // Aggregate all posted performance data into social screen stats
+  const posted=D.calendar.posts.filter(p=>p.status==='posted'&&p.perf);
+  const totalReach=posted.reduce((s,p)=>s+(p.perf.reach||0),0);
+  const totalEng=posted.reduce((s,p)=>s+(p.perf.likes||0)+(p.perf.comments||0)+(p.perf.clicks||0),0);
+  // Update SM screen if visible
+  const smReach=document.getElementById('sm-reach');
+  if(smReach&&totalReach>0)smReach.textContent=totalReach.toLocaleString('en-GB');
+  const smEng=document.getElementById('sm-engage');
+  if(smEng&&totalEng>0)smEng.textContent=totalEng.toLocaleString('en-GB');
+}
+
+// Enhanced rCalendar to also show performance summary at top
+function getCalPerfSummary(){
+  const posted=D.calendar.posts.filter(p=>p.status==='posted'&&p.perf&&(p.perf.likes||p.perf.reach));
+  if(!posted.length)return null;
+  return {
+    totalReach:posted.reduce((s,p)=>s+(p.perf.reach||0),0),
+    totalLikes:posted.reduce((s,p)=>s+(p.perf.likes||0),0),
+    totalComments:posted.reduce((s,p)=>s+(p.perf.comments||0),0),
+    totalClicks:posted.reduce((s,p)=>s+(p.perf.clicks||0),0),
+    count:posted.length
+  };
+}
+
+// INIT — triggered by login
+if(sessionStorage.getItem('elite_auth')=='true'){rHome();initAnalyticsCharts();}
+</script>
+</body>
+</html>
