@@ -1003,9 +1003,20 @@ function up(){const c=D.bal,pct=Math.min((c/1000)*100,100);['ic','inv-donut-val'
 function rI(){rPf();up();}
 
 // ── AI CHATS ───────────────────────────────────────────────────────────────
-async function aiCall(msgs,sys,typingId){
-  try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:1000,system:sys,messages:msgs})});const d=await r.json();return d.content[0].text;}
-  catch(e){return'Connection error. Please try again.';}
+async function aiCall(msgs,sys){
+  try{
+    const r=await fetch('/api/chat',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-dashboard-auth':'EliteGroup2025!'
+      },
+      body:JSON.stringify({model:M,max_tokens:1000,system:sys,messages:msgs})
+    });
+    const d=await r.json();
+    if(d.error)return'Error: '+d.error;
+    return d.content[0].text;
+  }catch(e){return'Connection error. Please try again.';}
 }
 async function si(){const inp=document.getElementById('ii'),msg=inp.value.trim();if(!msg)return;inp.value='';const cm=document.getElementById('icm');cm.innerHTML+=`<div class="msg u">${msg}</div><div class="msg a" id="it"><span class="sp"></span></div>`;cm.scrollTop=cm.scrollHeight;D.ih.push({role:'user',content:msg});const sys=`You are an AI investment advisor for Liam Walsh, Director of Elite Group LCA. He's building from £50 to £1,000. Analyse world events and market trends. State risk level. Suggest specific assets. Be concise. Note this is not regulated financial advice. Portfolio: ${JSON.stringify(D.pf)}. Balance: £${D.bal.toFixed(2)}. Watchlist: ${D.wl.join(', ')}.`;const rep=await aiCall(D.ih,sys);D.ih.push({role:'assistant',content:rep});document.getElementById('it').outerHTML=`<div class="msg a">${rep.replace(/\n/g,'<br>')}</div>`;cm.scrollTop=cm.scrollHeight;if(D.ih.length>20)D.ih=D.ih.slice(-20);sv();}
 async function sa(){const inp=document.getElementById('ai2'),msg=inp.value.trim();if(!msg)return;inp.value='';const cm=document.getElementById('acm');cm.innerHTML+=`<div class="msg u">${msg}</div><div class="msg a" id="at"><span class="sp"></span></div>`;cm.scrollTop=cm.scrollHeight;D.ah.push({role:'user',content:msg});const sys=`You are an AI business assistant for Liam Walsh, Director of Elite Group LCA — managed print services, Birkenhead, Wirral. Products: Kyocera and Konica Minolta. Services: Managed Print with PaperCut (fully in-house), Account Management, Elite Service. Customers: schools and businesses, North West. Be practical, concise and professional. Quotes: ${D.quotes.length}. Leads: ${D.leads.length}.`;const rep=await aiCall(D.ah,sys);D.ah.push({role:'assistant',content:rep});document.getElementById('at').outerHTML=`<div class="msg a">${rep.replace(/\n/g,'<br>')}</div>`;document.getElementById('acm').scrollTop=9999;if(D.ah.length>20)D.ah=D.ah.slice(-20);sv();}
@@ -1030,7 +1041,7 @@ async function genDaily(){
   const themeMap={general:'general brand promotion',papercut:'PaperCut print management software',schools:'schools and education sector',savings:'cost savings and tier billing',service:'Elite service excellence'};
   const prompt=`Generate 3 social media posts for Elite Group LCA, managed print services, Birkenhead Wirral. Focus: ${themeMap[theme]||'general'}. Facts: Kyocera & Konica Minolta dealer, PaperCut in-house, 99% uptime, 98% first fix, 30s call answer, tier billing, 30% avg savings, 100+ schools. Strapline: "Print with Confidence, Every Time". Create one for LinkedIn (professional, 150-200 words, 3-5 hashtags), Facebook (friendly, 100-150 words), Instagram (80-100 words, 8-10 hashtags, emojis). Format each with the platform name as a header.`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:1500,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json','x-dashboard-auth':'EliteGroup2025!'},body:JSON.stringify({model:M,max_tokens:1500,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();const text=d.content[0].text;
     const pColors={'LinkedIn':'#0077b5','Facebook':'#1877f2','Instagram':'#e1306c'};
     const pIcons={'LinkedIn':'in','Facebook':'f','Instagram':'📷'};
@@ -1057,7 +1068,7 @@ function renderSavedPosts(){
   const pIcons={'LinkedIn':'in','Facebook':'f','Instagram':'📷'};
   if(el)el.innerHTML=D.sm.posts.map(p=>`<div style="display:flex;gap:12px;padding:12px 14px;background:var(--bg3);border:1px solid var(--b);border-radius:12px;margin-bottom:8px;align-items:flex-start"><div style="width:26px;height:26px;border-radius:7px;background:${pColors[p.platform]||'#666'};display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;flex-shrink:0">${pIcons[p.platform]||'?'}</div><div style="flex:1;min-width:0"><div style="display:flex;align-items:center;gap:8px;margin-bottom:4px"><span style="font-size:12px;font-weight:600">${p.platform}</span>${p.isAd?'<span class="bx bx-r" style="font-size:9px">Ad</span>':'<span class="bx bx-c" style="font-size:9px">Post</span>'}<span style="font-size:10px;color:var(--t3);margin-left:auto">${p.date}</span></div><div style="font-size:12px;color:var(--t2);line-height:1.5;max-height:60px;overflow:hidden">${(p.text||'').substring(0,180)}${(p.text||'').length>180?'...':''}</div></div><div style="display:flex;gap:4px;flex-shrink:0"><button onclick="navigator.clipboard.writeText(decodeURIComponent('${encodeURIComponent(p.text||'')}'))" class="btn btn-s btn-xs">📋</button><button onclick="deletePost(${p.id})" style="background:none;border:none;color:var(--t3);cursor:pointer;font-size:14px">✕</button></div></div>`).join('');
 }
-async function genAd(){const p=document.getElementById('ad-platform').value,t=document.getElementById('ad-type').value,tn=document.getElementById('ad-tone').value;const ow=document.getElementById('ad-output-wrap'),out=document.getElementById('ad-output');ow.style.display='block';out.textContent='Generating...';const prompt=`Write a ${tn.toLowerCase()} ${p} advertisement for Elite Group LCA promoting: ${t}. Company: managed print, Birkenhead Wirral. Kyocera & Konica Minolta dealer, PaperCut included, tier billing, 30% savings, 99% uptime, 98% first fix, 30s call answer, 100+ schools. Include headline, body copy, call to action, hashtags. Phone: 0151 317 8848 | elitegrouplca.com`;try{const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:800,messages:[{role:'user',content:prompt}]})});const d=await r.json();out.textContent=d.content[0].text;}catch(e){out.textContent='Error. Please try again.';}}
+async function genAd(){const p=document.getElementById('ad-platform').value,t=document.getElementById('ad-type').value,tn=document.getElementById('ad-tone').value;const ow=document.getElementById('ad-output-wrap'),out=document.getElementById('ad-output');ow.style.display='block';out.textContent='Generating...';const prompt=`Write a ${tn.toLowerCase()} ${p} advertisement for Elite Group LCA promoting: ${t}. Company: managed print, Birkenhead Wirral. Kyocera & Konica Minolta dealer, PaperCut included, tier billing, 30% savings, 99% uptime, 98% first fix, 30s call answer, 100+ schools. Include headline, body copy, call to action, hashtags. Phone: 0151 317 8848 | elitegrouplca.com`;try{const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json','x-dashboard-auth':'EliteGroup2025!'},body:JSON.stringify({model:M,max_tokens:800,messages:[{role:'user',content:prompt}]})});const d=await r.json();out.textContent=d.content[0].text;}catch(e){out.textContent='Error. Please try again.';}}
 
 // ── TENDER WATCH ───────────────────────────────────────────────────────────
 function rTenders(){
@@ -1077,7 +1088,7 @@ async function fetchTenders(){
   const sMap={all:'all sectors',education:'schools and education',council:'local authorities',nhs:'NHS and healthcare',housing:'housing associations'};
   const prompt=`You are a procurement intelligence assistant. Generate a realistic list of 8-10 copier/printer/managed print service contract opportunities in ${rMap[region]||'North West England'} for ${sMap[sector]||'all sectors'}. Base on typical UK procurement cycles and organisations in this region. For each: org name, sector, location, estimated annual value, renewal reason, score (Hot/Warm/Cold), recommended action. Return ONLY a JSON array with fields: org, sector, location, value, reason, score, action. No other text.`;
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:2000,messages:[{role:'user',content:prompt}]})});
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json','x-dashboard-auth':'EliteGroup2025!'},body:JSON.stringify({model:M,max_tokens:2000,messages:[{role:'user',content:prompt}]})});
     const d=await r.json();
     let text=d.content[0].text.trim().replace(/```json/g,'').replace(/```/g,'').trim();
     const opps=JSON.parse(text);
@@ -1263,7 +1274,7 @@ async function calGenPost(){
   const btn=document.querySelector('[onclick="calGenPost()"]');
   const orig=btn.textContent;btn.textContent='⏳ Generating...';
   try{
-    const r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({model:M,max_tokens:600,messages:[{role:'user',content:`Write a ${platform} post for Elite Group LCA about: ${prompt}. Elite Group: managed print services, Birkenhead Wirral, Kyocera & Konica Minolta dealer, PaperCut in-house, 99% uptime, 98% first fix, 30s call answer, 30% avg savings. Strapline: "Print with Confidence, Every Time". Make it compelling with relevant hashtags.`}]})});
+    const r=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json','x-dashboard-auth':'EliteGroup2025!'},body:JSON.stringify({model:M,max_tokens:600,messages:[{role:'user',content:`Write a ${platform} post for Elite Group LCA about: ${prompt}. Elite Group: managed print services, Birkenhead Wirral, Kyocera & Konica Minolta dealer, PaperCut in-house, 99% uptime, 98% first fix, 30s call answer, 30% avg savings. Strapline: "Print with Confidence, Every Time". Make it compelling with relevant hashtags.`}]})});
     const d=await r.json();
     document.getElementById('cal-content').value=d.content[0].text;
   }catch(e){alert('Error generating. Please try again.');}
