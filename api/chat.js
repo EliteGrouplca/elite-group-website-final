@@ -1,13 +1,17 @@
+import { isAuthenticated, noStore } from './_auth.js';
+
 export default async function handler(req, res) {
+  noStore(res);
   // Only allow POST requests
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  // Basic auth check — must include password header
-  const auth = req.headers['x-dashboard-auth'];
-  if (auth !== 'EliteGroup2025!') {
-    return res.status(401).json({ error: 'Unauthorised' });
+  try {
+    if (!isAuthenticated(req)) return res.status(401).json({ error: 'Unauthorised' });
+  } catch (error) {
+    console.error('Dashboard session configuration error:', error.message);
+    return res.status(500).json({ error: 'Authentication is unavailable' });
   }
 
   try {
